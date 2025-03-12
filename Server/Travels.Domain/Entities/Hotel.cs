@@ -12,6 +12,6 @@ namespace Travels.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public int Rating { get; set; }
-        public virtual ICollection<Trip> Trips { get; set; } = default!;
+        public virtual ICollection<TravelOffer> TravelOffers { get; set; } = default!;
     }
 }

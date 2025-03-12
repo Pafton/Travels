@@ -12,9 +12,9 @@ namespace Travels.Domain.Entities
         public string Comment { get; set; } = default!;
         public int Rating { get; set; } 
         public DateTime Date { get; set; }
-        public string UserIdentifier { get; set; } = default!;// Może lub unikalny identyfikator użytkownika
-        public int TripId { get; set; }
-        public Trip Trip { get; set; } = default!;
+        public string UserIdentifier { get; set; } = default!;
+        public int TravelOfferId { get; set; }
+        public virtual TravelOffer TravelOffer { get; set; } = default!;
         public bool IsEditable { get; set; }
     }
 }

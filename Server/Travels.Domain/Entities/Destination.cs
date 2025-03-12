@@ -13,6 +13,6 @@ namespace Travels.Domain.Entities
         public string Country { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public virtual ICollection<Trip> Trips { get; set; } = default!;
+        public virtual ICollection<TravelOffer> TravelOffers { get; set; } = default!;
     }
 }

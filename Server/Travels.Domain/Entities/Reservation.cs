@@ -10,9 +10,9 @@ namespace Travels.Domain.Entities
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; } = default!;
-        public int TripId { get; set; }
-        public Trip Trip { get; set; } = default!;
+        public virtual User User { get; set; } = default!;
+        public int TravelOfferId { get; set; }
+        public virtual TravelOffer TravelOffer { get; set; } = default!;
         public DateTime ReservationDate { get; set; }
         public string Status { get; set; } = default!;
         public decimal TotalAmount { get; set; }

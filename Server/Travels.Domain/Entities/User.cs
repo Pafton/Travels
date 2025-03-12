@@ -14,5 +14,7 @@
             public string Email { get; set; } = default!;
             public string Password { get; set; } = default!;
             public Role Role { get; set; }
+            public virtual ICollection<Review> Reviews { get; set; } = default!;
+            public virtual ICollection<Reservation> Reservations { get; set; } = default!;
         }
     }
