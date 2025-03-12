@@ -45,14 +45,12 @@ namespace Travels.Infrastructure.Presistance
             // Relacja między TravelOffer a Hotel (M:N)
             modelBuilder.Entity<TravelOffer>()
                 .HasMany(to => to.Hotels)
-                .WithMany(h => h.TravelOffers)
-                .UsingEntity(j => j.ToTable("TravelOfferHotel"));
+                .WithMany(h => h.TravelOffers);
 
             // Relacja między TravelOffer a Transport (M:N)
             modelBuilder.Entity<TravelOffer>()
                 .HasMany(to => to.Transports)
-                .WithMany(t => t.TravelOffers)
-                .UsingEntity(j => j.ToTable("TravelOfferTransport"));
+                .WithMany(t => t.TravelOffers);
 
             // Relacja między Reservation a User (N:1)
             modelBuilder.Entity<Reservation>()

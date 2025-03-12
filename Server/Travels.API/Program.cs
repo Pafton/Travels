@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using System;
+using Travels.Domain.Entities;
 using Travels.Infrastructure.Presistance;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -60,6 +62,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 //Adds services to the Dependency Injection Container
 
+//Password Hasher
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -67,6 +73,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+//----------------------------------Preparing database-----------------------------------------------
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
+    var prepDatabase = new PrepDatabase(dbContext, passwordHasher);
+    prepDatabase.Seed();
 }
 
 
