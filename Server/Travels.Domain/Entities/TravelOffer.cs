@@ -15,6 +15,5 @@ namespace Travels.Domain.Entities
         public DateOnly Begin {  get; set; }
         public DateOnly End { get; set; }
         public int AvailableSpots { get; set; }
-        public ICollection<User> Users { get; set; } = default!;
     }
 }
