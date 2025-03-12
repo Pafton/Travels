@@ -15,6 +15,11 @@ namespace Travels.Domain.Entities
         public DateOnly Begin {  get; set; }
         public DateOnly End { get; set; }
         public int AvailableSpots { get; set; }
-        public ICollection<User> Users { get; set; } = default!;
+        public int DestinationId { get; set; }
+        public virtual Destination Destination { get; set; } = default!;
+        public virtual ICollection<Reservation> Reservations { get; set; } = default!;
+        public virtual ICollection<Hotel> Hotels { get; set; } = default!;
+        public virtual ICollection<Transport> Transports { get; set; } = default!;
+        public virtual ICollection<Review> Reviews { get; set; } = default!;
     }
 }

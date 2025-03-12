@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Travels.Domain.Entities
 {
-    public class Reservation
+    public class Review
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public virtual User User { get; set; } = default!;
+        public string Comment { get; set; } = default!;
+        public int Rating { get; set; } 
+        public DateTime Date { get; set; }
+        public string UserIdentifier { get; set; } = default!;
         public int TravelOfferId { get; set; }
         public virtual TravelOffer TravelOffer { get; set; } = default!;
-        public DateTime ReservationDate { get; set; }
-        public string Status { get; set; } = default!;
-        public decimal TotalAmount { get; set; }
+        public bool IsEditable { get; set; }
     }
 }
