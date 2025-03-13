@@ -21,44 +21,47 @@ namespace Travels.Infrastructure.Presistance
         {
             if (_appDbContext.Database.CanConnect())
             {
-                
                 if (!_appDbContext.Users.Any())
                 {
                     var users = SeedUser();
                     _appDbContext.Users.AddRange(users);
+                    _appDbContext.SaveChanges();
                 }
 
                 if (!_appDbContext.Destinations.Any())
                 {
                     var destinations = SeedDestinations();
                     _appDbContext.Destinations.AddRange(destinations);
+                    _appDbContext.SaveChanges();
                 }
 
                 if (!_appDbContext.Hotels.Any())
                 {
                     var hotels = SeedHotels();
                     _appDbContext.Hotels.AddRange(hotels);
+                    _appDbContext.SaveChanges();
                 }
 
                 if (!_appDbContext.Transports.Any())
                 {
                     var transports = SeedTransports();
                     _appDbContext.Transports.AddRange(transports);
+                    _appDbContext.SaveChanges();
                 }
 
                 if (!_appDbContext.TravelOffers.Any())
                 {
                     var travelOffers = SeedTravelOffers();
                     _appDbContext.TravelOffers.AddRange(travelOffers);
+                    _appDbContext.SaveChanges();
                 }
-
 
                 if (!_appDbContext.Reservations.Any())
                 {
                     var reservations = SeedReservations();
                     _appDbContext.Reservations.AddRange(reservations);
+                    _appDbContext.SaveChanges();
                 }
-                _appDbContext.SaveChanges();
             }
         }
 
@@ -112,61 +115,73 @@ namespace Travels.Infrastructure.Presistance
             return transport;
         }
 
-        private IEnumerable<Reservation> SeedReservations()
-        {
-            var reservation = new List<Reservation>()
-            {
-                new Reservation() { UserId = 1, TravelOfferId = 1, ReservationDate = DateTime.Now },
-                new Reservation() { UserId = 2, TravelOfferId = 2, ReservationDate = DateTime.Now },
-                new Reservation() { UserId = 3, TravelOfferId = 3, ReservationDate = DateTime.Now }
-            };
-            return reservation;
-        }
-
         private IEnumerable<TravelOffer> SeedTravelOffers()
-        {
-            var transport = _appDbContext.Transports.First();
-            var hotels = _appDbContext.Hotels.ToList();
-            var destinations = _appDbContext.Destinations.ToList();
+{
+            var transportLot = _appDbContext.Transports.First(t => t.Type == "Lot");
+            var transportTrain = _appDbContext.Transports.First(t => t.Type == "Pociąg");
+            var transportBus = _appDbContext.Transports.First(t => t.Type == "Autobus");
+
+            var hotelMaldives = _appDbContext.Hotels.First(h => h.Name == "Resort Plażowy");
+            var hotelParis = _appDbContext.Hotels.First(h => h.Name == "Luksusowy Eiffel");
+            var hotelNY = _appDbContext.Hotels.First(h => h.Name == "Central Park Hotel");
+
+            var destinationMaldives = _appDbContext.Destinations.First(d => d.Name == "Malediwy");
+            var destinationParis = _appDbContext.Destinations.First(d => d.Name == "Paryż");
+            var destinationNY = _appDbContext.Destinations.First(d => d.Name == "Nowy Jork");
 
             var travelOffers = new List<TravelOffer>()
             {
-                new TravelOffer() {
-                    Title = "Tropikalna Ucieczka",
-                    Description = "Spędź tydzień na Malediwach w luksusowym resorcie nad plażą",
-                    Price = 2500.0,
-                    Begin = new DateOnly(2025, 06, 01),
-                    End = new DateOnly(2025, 06, 07),
-                    AvailableSpots = 10,
-                    DestinationId = destinations.First(d => d.Name == "Malediwy").Id,
-                    Hotels = new List<Hotel> { hotels.First(h => h.Name == "Resort Plażowy") },
-                    Transports = new List<Transport> { transport }
-                },
-                new TravelOffer() {
-                    Title = "Romantyzm Paryża",
-                    Description = "Doświadcz piękna Paryża z przewodnikiem",
-                    Price = 1800.0,
-                    Begin = new DateOnly(2025, 07, 15),
-                    End = new DateOnly(2025, 07, 22),
-                    AvailableSpots = 15,
-                    DestinationId = destinations.First(d => d.Name == "Paryż").Id,
-                    Hotels = new List<Hotel> { hotels.First(h => h.Name == "Luksusowy Eiffel") },
-                    Transports = new List<Transport> { transport }
-                },
-                new TravelOffer() {
+                new TravelOffer()
+                {
                     Title = "Przygoda w Nowym Jorku",
                     Description = "Poznaj ikoniczne miejsca Nowego Jorku",
                     Price = 2200.0,
                     Begin = new DateOnly(2025, 08, 01),
                     End = new DateOnly(2025, 08, 07),
                     AvailableSpots = 20,
-                    DestinationId = destinations.First(d => d.Name == "Nowy Jork").Id,
-                    Hotels = new List<Hotel> { hotels.First(h => h.Name == "Central Park Hotel") },
-                    Transports = new List<Transport> { transport }
+                    DestinationId = destinationNY.Id,
+                    Hotels = new List<Hotel> { hotelNY },
+                    Transports = new List<Transport> { transportBus }
+                },
+                new TravelOffer()
+                {
+                    Title = "Wakacje w Paryżu",
+                    Description = "Zwiedzanie Luwru, Wieży Eiffla i rejs po Sekwanie",
+                    Price = 1800.0,
+                    Begin = new DateOnly(2025, 06, 15),
+                    End = new DateOnly(2025, 06, 22),
+                    AvailableSpots = 25,
+                    DestinationId = destinationParis.Id,
+                    Hotels = new List<Hotel> { hotelParis },
+                    Transports = new List<Transport> { transportTrain }
+                },
+                new TravelOffer()
+                {
+                    Title = "Rajskie Malediwy",
+                    Description = "Luksusowy wypoczynek na białych plażach",
+                    Price = 5000.0,
+                    Begin = new DateOnly(2025, 11, 05),
+                    End = new DateOnly(2025, 11, 15),
+                    AvailableSpots = 10,
+                    DestinationId = destinationMaldives.Id,
+                    Hotels = new List<Hotel> { hotelMaldives },
+                    Transports = new List<Transport> { transportLot }
                 }
             };
 
             return travelOffers;
+
+        }
+
+        private IEnumerable<Reservation> SeedReservations()
+        {
+            var reservation = new List<Reservation>()
+            {
+                new Reservation() { UserId = 1, TravelOfferId = 1,Status = false, TotalAmount = 25, ReservationDate = DateTime.Now },
+                new Reservation() { UserId = 2, TravelOfferId = 2,Status = false, TotalAmount = 15, ReservationDate = DateTime.Now },
+                new Reservation() { UserId = 3, TravelOfferId = 3,Status = false, TotalAmount = 30, ReservationDate = DateTime.Now }
+            };
+            return reservation;
         }
     }
 }
