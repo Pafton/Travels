@@ -15,6 +15,5 @@ namespace Travels.Domain.Entities
         public virtual TravelOffer TravelOffer { get; set; } = default!;
         public DateTime ReservationDate { get; set; }
         public bool Status { get; set; } = false;
-        public int TotalAmount { get; set; }
     }
 }

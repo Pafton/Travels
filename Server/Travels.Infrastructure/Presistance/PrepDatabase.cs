@@ -177,9 +177,9 @@ namespace Travels.Infrastructure.Presistance
         {
             var reservation = new List<Reservation>()
             {
-                new Reservation() { UserId = 1, TravelOfferId = 1,Status = false, TotalAmount = 25, ReservationDate = DateTime.Now },
-                new Reservation() { UserId = 2, TravelOfferId = 2,Status = false, TotalAmount = 15, ReservationDate = DateTime.Now },
-                new Reservation() { UserId = 3, TravelOfferId = 3,Status = false, TotalAmount = 30, ReservationDate = DateTime.Now }
+                new Reservation() { UserId = 1, TravelOfferId = 1,Status = false, ReservationDate = DateTime.Now },
+                new Reservation() { UserId = 2, TravelOfferId = 2,Status = false, ReservationDate = DateTime.Now },
+                new Reservation() { UserId = 3, TravelOfferId = 3,Status = false, ReservationDate = DateTime.Now }
             };
             return reservation;
         }

@@ -34,7 +34,21 @@ namespace Travels.Application.Services
             if (reservation == null)
                 throw new KeyNotFoundException("Reservation not found");
 
+            reservation.TravelOffer.AvailableSpots--;
             await _reservationRepository.DeleteReservation(id);
+        }
+
+        public async Task<ReservationDto?> GetReservation(int id)
+        {
+            if(id < 0)
+                throw new ArgumentOutOfRangeException($"Id must be grater by 0 , or This id {id} do not exists");
+
+            var reservation = await _reservationRepository.GetReservation(id);
+            if (reservation == null)
+                throw new Exception("Reservation not found");
+
+            var reservationDto = _mapper.Map<ReservationDto>(reservation);
+            return reservationDto;
         }
 
         public async Task StartReservation(ReservationDto reservationDto)
@@ -51,6 +65,9 @@ namespace Travels.Application.Services
                 throw new Exception("Offer not found");
 
             var reservation = _mapper.Map<Reservation>(reservationDto);
+
+            reservation.TravelOffer.AvailableSpots++;
+
             await _reservationRepository.AddReservation(reservation);
         }
 
@@ -70,7 +87,6 @@ namespace Travels.Application.Services
             reservation.ReservationDate = reservationDto.ReservationDate;
             reservation.TravelOfferId = reservationDto.TravelOfferId;
             reservation.Status = reservationDto.Status;
-            reservation.TotalAmount = reservationDto.TotalAmount;
 
             await _reservationRepository.ChangeReservation(reservation);
         }
