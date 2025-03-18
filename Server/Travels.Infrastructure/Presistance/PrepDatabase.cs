@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Travels.Domain.Entities;
 
 namespace Travels.Infrastructure.Presistance
@@ -116,7 +113,7 @@ namespace Travels.Infrastructure.Presistance
         }
 
         private IEnumerable<TravelOffer> SeedTravelOffers()
-{
+        {
             var transportLot = _appDbContext.Transports.First(t => t.Type == "Lot");
             var transportTrain = _appDbContext.Transports.First(t => t.Type == "Pociąg");
             var transportBus = _appDbContext.Transports.First(t => t.Type == "Autobus");

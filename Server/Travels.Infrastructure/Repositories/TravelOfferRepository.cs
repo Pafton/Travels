@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Travels.Domain.Entities;
 using Travels.Domain.Interfaces;
 using Travels.Infrastructure.Presistance;
@@ -17,10 +12,10 @@ namespace Travels.Infrastructure.Repositories
         {
             _appDbContext = appDbContext;
         }
-    
+
         public async Task AddTravelOffer(TravelOffer travelOffer)
         {
-            if(travelOffer == null) 
+            if (travelOffer == null)
                 throw new ArgumentNullException(nameof(travelOffer));
             await _appDbContext.TravelOffers.AddAsync(travelOffer);
             await _appDbContext.SaveChangesAsync();
@@ -36,7 +31,7 @@ namespace Travels.Infrastructure.Repositories
 
         public async Task DeleteTravelOffer(int id)
         {
-            if(id < 0)
+            if (id < 0)
                 throw new ArgumentOutOfRangeException(nameof(id));
 
             var travelOffer = await _appDbContext.TravelOffers.FirstOrDefaultAsync(to => to.Id == id);

@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Travels.Application.Dtos;
 using Travels.Application.Interfaces;
 using Travels.Domain.Entities;
@@ -17,7 +12,7 @@ namespace Travels.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly ITravelOfferRepository _travelOfferRepository;
         private readonly IMapper _mapper;
-        public ReservationService(IReservationRepository reservationRepository,  IUserRepository userRepository, ITravelOfferRepository travelOfferRepository ,IMapper mapper)
+        public ReservationService(IReservationRepository reservationRepository, IUserRepository userRepository, ITravelOfferRepository travelOfferRepository, IMapper mapper)
         {
             _reservationRepository = reservationRepository;
             _userRepository = userRepository;
@@ -27,7 +22,7 @@ namespace Travels.Application.Services
 
         public async Task CancelReservation(int id)
         {
-            if(id < 0)
+            if (id < 0)
                 throw new ArgumentOutOfRangeException($"Id must be grater by 0 , or This id {id} do not exists");
 
             var reservation = await _reservationRepository.GetReservation(id);
@@ -40,7 +35,7 @@ namespace Travels.Application.Services
 
         public async Task<ReservationDto?> GetReservation(int id)
         {
-            if(id < 0)
+            if (id < 0)
                 throw new ArgumentOutOfRangeException($"Id must be grater by 0 , or This id {id} do not exists");
 
             var reservation = await _reservationRepository.GetReservation(id);
@@ -73,7 +68,7 @@ namespace Travels.Application.Services
 
         public async Task UpdateReservation(ReservationDto reservationDto, int id)
         {
-            if(reservationDto == null)
+            if (reservationDto == null)
                 throw new ArgumentNullException(nameof(reservationDto));
 
             if (id < 0)

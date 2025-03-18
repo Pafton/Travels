@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Travels.Domain.Entities;
 using Travels.Domain.Interfaces;
 using Travels.Infrastructure.Presistance;
@@ -26,7 +21,7 @@ namespace Travels.Infrastructure.Repositories
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            user.Password = _passwordHasher.HashPassword(user,user.Password);
+            user.Password = _passwordHasher.HashPassword(user, user.Password);
 
             await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();
@@ -63,6 +58,10 @@ namespace Travels.Infrastructure.Repositories
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _appDbContext.Users.ToListAsync();
+        }
+        public async Task<User?> GetByEmail(string email)
+        {
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

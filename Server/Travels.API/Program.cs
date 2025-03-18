@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Any;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
+using System.Text;
 using Travels.Application.Interfaces;
 using Travels.Application.Services;
 using Travels.Domain.Entities;
@@ -17,6 +18,38 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//---------------------AUTHETNTICATION----------------------
+
+
+var jwtSettings = builder.Configuration.GetSection("Authentication");
+var key = Encoding.ASCII.GetBytes(jwtSettings["JwtKey"]);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["JwtIssuer"],
+        ValidAudience = jwtSettings["JwtIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+});
+
+
+builder.Services.AddAuthorization();
+
+
+//----------------------------------------------------------
+
+
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
@@ -29,7 +62,7 @@ builder.Services.AddSwaggerGen(opt =>
         Type = SecuritySchemeType.Http,
         BearerFormat = "JWT",
         Scheme = "bearer"
-    }); 
+    });
 
     opt.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -76,7 +109,7 @@ builder.Services.AddScoped<ITravelOfferRepository, TravelOfferRepository>();
 
 //Adds services to the Dependency Injection Container
 builder.Services.AddScoped<IReservationService, ReservationService>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 //Password Hasher
@@ -102,6 +135,8 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseCors("AllowOrigin");
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
