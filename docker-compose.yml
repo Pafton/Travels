@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  travels.api:
+    container_name: travels-api
+    image: ${DOCKER_REGISTRY-}travelsapi
+    ports:
+      - "5010:80"  
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    entrypoint: ["dotnet", "Travels.API.dll"]
+    build:
+      context: .
+      dockerfile: Server/Travels.API/Dockerfile
