@@ -9,11 +9,9 @@ namespace Travels.Infrastructure.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IPasswordHasher<User> _passwordHasher;
-        public UserRepository(AppDbContext appDbContext, IPasswordHasher<User> passwordHasher)
+        public UserRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
-            _passwordHasher = passwordHasher;
         }
 
         public async Task AddUser(User user)
