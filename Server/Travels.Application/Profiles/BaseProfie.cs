@@ -13,10 +13,8 @@ namespace Travels.Application.Profiles
             CreateMap<Reservation, ReservationDto>();
 
             CreateMap<User, RegisterDto>();
-            CreateMap<RegisterDto, User>();
-
-            CreateMap<User, LoginDto>();
-            CreateMap<LoginDto, User>();
+            CreateMap<RegisterDto, User>()
+                .ForMember(dest => dest.Password, opt => opt.Ignore());
         }
     }
 }

@@ -21,8 +21,6 @@ namespace Travels.Infrastructure.Repositories
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            user.Password = _passwordHasher.HashPassword(user, user.Password);
-
             await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();
         }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Scholario.Application.Authentication;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -54,6 +55,9 @@ namespace Travels.Application.Services
                 throw new Exception("User not found");
 
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginDto.Password);
+
+            Debug.WriteLine(passwordVerificationResult);
+
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
                 throw new UnauthorizedAccessException("Invalid email or password");
 
