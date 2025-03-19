@@ -43,6 +43,9 @@ namespace Travels.API.Controllers
 
         [HttpPost]
         [Route("StartReservation")]
+        [SwaggerOperation(Summary = "Tworzy nową rezerwację", Description = "Tworzy nową rezerwację na podstawie przekazanych danych.")]
+        [SwaggerResponse(200, "Rezerwacja została pomyślnie utworzona.")]
+        [SwaggerResponse(400, "Nieprawidłowe dane rezerwacji.")]
         public async Task<IActionResult> StartReservation([FromBody] ReservationDto reservationDto)
         {
             try
@@ -64,6 +67,10 @@ namespace Travels.API.Controllers
 
         [HttpDelete]
         [Route("CancelReservation/{id}")]
+        [SwaggerOperation(Summary = "Anuluje rezerwację o podanym ID", Description = "Anuluje rezerwację na podstawie identyfikatora.")]
+        [SwaggerResponse(200, "Rezerwacja została pomyślnie anulowana.")]
+        [SwaggerResponse(400, "Nieprawidłowe ID rezerwacji.")]
+        [SwaggerResponse(404, "Rezerwacja nie została znaleziona.")]
         public async Task<IActionResult> CancelReservation(int id)
         {
             try
@@ -90,6 +97,9 @@ namespace Travels.API.Controllers
 
         [HttpPut]
         [Route("UpdateReservation/{id}")]
+        [SwaggerOperation(Summary = "Aktualizuje rezerwację o podanym ID", Description = "Aktualizuje rezerwację na podstawie identyfikatora i przekazanych danych.")]
+        [SwaggerResponse(200, "Rezerwacja została pomyślnie zaktualizowana.")]
+        [SwaggerResponse(400, "Nieprawidłowe dane rezerwacji lub ID.")]
         public async Task<IActionResult> UpdateReservation([FromBody] ReservationDto reservationDto, int id)
         {
             try
