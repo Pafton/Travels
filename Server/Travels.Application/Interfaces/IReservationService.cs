@@ -1,4 +1,4 @@
-﻿using Travels.Application.Dtos;
+﻿using Travels.Application.Dtos.Reservation;
 
 namespace Travels.Application.Interfaces
 {

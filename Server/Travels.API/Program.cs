@@ -110,6 +110,7 @@ builder.Services.AddScoped<ITravelOfferRepository, TravelOfferRepository>();
 //Adds services to the Dependency Injection Container
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITravelOfferService, TravelOfferService>();
 
 
 //Password Hasher

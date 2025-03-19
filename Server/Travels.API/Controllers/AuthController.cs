@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Travels.Application.Dtos;
+using Travels.Application.Dtos.Auth;
 using Travels.Application.Interfaces;
 
 namespace Travels.API.Controllers

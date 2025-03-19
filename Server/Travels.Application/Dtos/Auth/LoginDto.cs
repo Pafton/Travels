@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Travels.Application.Dtos
+namespace Travels.Application.Dtos.Auth
 {
     public class LoginDto
     {

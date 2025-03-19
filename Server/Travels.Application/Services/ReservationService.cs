@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Travels.Application.Dtos;
+using Travels.Application.Dtos.Reservation;
 using Travels.Application.Interfaces;
 using Travels.Domain.Entities;
 using Travels.Domain.Interfaces;

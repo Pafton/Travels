@@ -1,4 +1,4 @@
-﻿namespace Travels.Application.Dtos
+﻿namespace Travels.Application.Dtos.Reservation
 {
     public class ReservationDto
     {

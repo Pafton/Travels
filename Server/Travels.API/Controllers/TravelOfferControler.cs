@@ -1,0 +1,129 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using Travels.Application.Dtos.Travel;
+using Travels.Application.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Travels.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class TravelOfferController : ControllerBase
+    {
+        private readonly ITravelOfferService _travelOfferService;
+
+        public TravelOfferController(ITravelOfferService travelOfferService)
+        {
+            _travelOfferService = travelOfferService;
+        }
+
+        [HttpGet]
+        [Route("GetTravel/{id}")]
+        [SwaggerOperation(Summary = "Pobiera ofertę podróży o podanym ID", Description = "Zwraca szczegóły oferty podróży na podstawie identyfikatora.")]
+        [SwaggerResponse(200, "Oferta podróży została znaleziona i zwrócona.", typeof(TravelOfferDto))]
+        [SwaggerResponse(400, "Nieprawidłowe ID oferty podróży.")]
+        [SwaggerResponse(404, "Oferta podróży nie została znaleziona.")]
+        public async Task<IActionResult> GetTravel(int id)
+        {
+            try
+            {
+                var travelOfferDto = await _travelOfferService.GetTravel(id);
+                return Ok(travelOfferDto);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return BadRequest($"Invalid id: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[TravelOfferCtl] Unhandled exception: {ex.Message}");
+                return NotFound($"Travel offer not found: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAllTravels")]
+        [SwaggerOperation(Summary = "Pobiera wszystkie oferty podróży", Description = "Zwraca wszystkie dostępne oferty podróży.")]
+        [SwaggerResponse(200, "Oferty podróży zostały zwrócone.", typeof(IEnumerable<TravelOfferDto>))]
+        [SwaggerResponse(404, "Brak dostępnych ofert podróży.")]
+        public async Task<IActionResult> GetAllTravels()
+        {
+            try
+            {
+                var travelOffersDto = await _travelOfferService.GetTravels();
+                return Ok(travelOffersDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[TravelOfferCtl] Unhandled exception: {ex.Message}");
+                return NotFound($"No travel offers found: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateTravel")]
+        [SwaggerOperation(Summary = "Tworzy nową ofertę podróży", Description = "Tworzy nową ofertę podróży na podstawie przekazanych danych.")]
+        [SwaggerResponse(200, "Oferta podróży została pomyślnie utworzona.")]
+        [SwaggerResponse(400, "Nieprawidłowe dane oferty podróży.")]
+        public async Task<IActionResult> CreateTravel([FromBody] TravelOfferDto travelOfferDto)
+        {
+            try
+            {
+                await _travelOfferService.NewTravel(travelOfferDto);
+                return Ok(new { message = "Travel offer created successfully" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[TravelOfferCtl] Unhandled exception: {ex.Message}");
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteTravel/{id}")]
+        [SwaggerOperation(Summary = "Usuwa ofertę podróży o podanym ID", Description = "Usuwa ofertę podróży na podstawie identyfikatora.")]
+        [SwaggerResponse(200, "Oferta podróży została pomyślnie usunięta.")]
+        [SwaggerResponse(400, "Nieprawidłowe ID oferty podróży.")]
+        [SwaggerResponse(404, "Oferta podróży nie została znaleziona.")]
+        public async Task<IActionResult> DeleteTravel(int id)
+        {
+            try
+            {
+                await _travelOfferService.RemoveTravelOffer(id);
+                return Ok(new { message = $"Travel offer with id {id} deleted" });
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return BadRequest($"Invalid id: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[TravelOfferCtl] Unhandled exception: {ex.Message}");
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateTravel/{id}")]
+        [SwaggerOperation(Summary = "Aktualizuje ofertę podróży o podanym ID", Description = "Aktualizuje ofertę podróży na podstawie identyfikatora i przekazanych danych.")]
+        [SwaggerResponse(200, "Oferta podróży została pomyślnie zaktualizowana.")]
+        [SwaggerResponse(400, "Nieprawidłowe dane oferty podróży lub ID.")]
+        public async Task<IActionResult> UpdateTravel([FromBody] TravelOfferDto travelOfferDto, int id)
+        {
+            try
+            {
+                await _travelOfferService.UpdateTravelOffer(travelOfferDto);
+                return Ok(new { message = $"Travel offer with id {id} updated" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[TravelOfferCtl] Unhandled exception: {ex.Message}");
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
+        }
+    }
+}

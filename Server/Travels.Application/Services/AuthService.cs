@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Travels.Application.Dtos;
+using Travels.Application.Dtos.Auth;
 using Travels.Application.Interfaces;
 using Travels.Domain.Entities;
 using Travels.Domain.Interfaces;
@@ -42,6 +42,8 @@ namespace Travels.Application.Services
                 throw new Exception("User already exists");
 
             var user = _mapper.Map<User>(registerDto);
+            user.Role = Role.Customer;
+
             user.Password = _passwordHasher.HashPassword(user, registerDto.Password);
             await _userRepository.AddUser(user);
 

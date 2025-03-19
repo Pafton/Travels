@@ -1,4 +1,4 @@
-﻿using Travels.Application.Dtos;
+﻿using Travels.Application.Dtos.Auth;
 using Travels.Domain.Entities;
 
 namespace Travels.Application.Interfaces
