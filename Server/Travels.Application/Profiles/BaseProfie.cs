@@ -19,7 +19,9 @@ namespace Travels.Application.Profiles
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
 
             CreateMap<TravelOffer, TravelOfferDto>();
-            CreateMap<TravelOfferDto, TravelOfferDto>();
+            CreateMap<TravelOfferDto, TravelOffer>();
+
+
         }
     }
 }

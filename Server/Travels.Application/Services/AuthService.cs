@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Scholario.Application.Authentication;
@@ -16,6 +17,8 @@ namespace Travels.Application.Services
 {
     public class AuthService : IAuthService
     {
+        private readonly IEmailSender _emailSender;
+        private readonly Dictionary<string, string> _resetTokens = new();
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IConfiguration _configuration;
@@ -26,12 +29,14 @@ namespace Travels.Application.Services
             IUserRepository userRepository,
             IPasswordHasher<User> passwordHasher,
             IConfiguration configuration,
-            IMapper mapper)
+            IMapper mapper,
+            IEmailSender emailSender) 
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
             _configuration = configuration;
             _mapper = mapper;
+            _emailSender = emailSender;
             _authenticationSettings = _configuration.GetSection("Authentication").Get<AuthenticationSettings>()!;
         }
 
@@ -89,6 +94,37 @@ namespace Travels.Application.Services
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
+        }
+
+
+        public async Task SendPasswordResetLink(string email)
+        {
+            var user = await _userRepository.GetByEmail(email);
+            if (user == null)
+                throw new Exception("User not found");
+
+            var token = Guid.NewGuid().ToString();
+            _resetTokens[token] = user.Email;
+
+            var resetLink = $"https://travel/reset-password?token={token}";
+
+            await _emailSender.SendEmailAsync(email, "Password Reset",
+                $"Click here to reset your password: {resetLink}");
+        }
+
+        public async Task ResetPassword(string token, string newPassword)
+        {
+            if (!_resetTokens.TryGetValue(token, out var email))
+                throw new Exception("Invalid or expired token");
+
+            var user = await _userRepository.GetByEmail(email);
+            if (user == null)
+                throw new Exception("User not found");
+
+            user.Password = _passwordHasher.HashPassword(user, newPassword);
+            await _userRepository.ChangeUser(user);
+
+            _resetTokens.Remove(token);
         }
     }
 }

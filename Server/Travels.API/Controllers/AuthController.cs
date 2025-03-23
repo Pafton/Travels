@@ -48,5 +48,36 @@ namespace Travels.API.Controllers
                 return BadRequest($"Error: {ex.Message}");
             }
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            try
+            {
+                await _authService.SendPasswordResetLink(dto.Email);
+                return Ok("Password reset link sent to email.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[AuthCtrl] Exception in ForgotPassword: {ex.Message}");
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            try
+            {
+                await _authService.ResetPassword(dto.Token, dto.NewPassword);
+                return Ok("Password has been reset.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[AuthCtrl] Exception in ResetPassword: {ex.Message}");
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
     }
 }
