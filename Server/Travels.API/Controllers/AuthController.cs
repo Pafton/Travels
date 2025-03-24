@@ -53,9 +53,9 @@ namespace Travels.API.Controllers
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
             try
-            {
-                await _authService.SendPasswordResetLink(dto.Email);
-                return Ok("Password reset link sent to email.");
+            {   
+                var token = await _authService.SendPasswordResetLink(dto.Email);
+                return Ok($"Password reset link sent to email.:{ token }");
             }
             catch (Exception ex)
             {

@@ -7,7 +7,7 @@
         {
             Task<bool> Register(RegisterDto registerDto);
             Task<string?> Login(LoginDto loginDto);
-            Task SendPasswordResetLink(string email);
+            Task<string> SendPasswordResetLink(string email);
             Task ResetPassword(string token, string newPassword);
     }
 }

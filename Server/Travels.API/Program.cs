@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Travels.Application.Authentication;
 using Travels.Application.Interfaces;
 using Travels.Application.Services;
 using Travels.Domain.Entities;
@@ -105,13 +106,15 @@ builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ITransportRepository, TransportRepository>();
 builder.Services.AddScoped<ITravelOfferRepository, TravelOfferRepository>();
+builder.Services.AddScoped<IPasswordResetTokenRepository, PasswordResetTokenRepository>();
 
 
 //Adds services to the Dependency Injection Container
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITravelOfferService, TravelOfferService>();
-
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IResetTokenService, ResetTokenService>();
 
 //Password Hasher
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();

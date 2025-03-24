@@ -12,6 +12,7 @@ namespace Travels.Infrastructure.Presistance
         public DbSet<Transport> Transports { get; set; }
         public DbSet<TravelOffer> TravelOffers { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -64,6 +65,12 @@ namespace Travels.Infrastructure.Presistance
                 .WithMany(to => to.Reviews)
                 .HasForeignKey(r => r.TravelOfferId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PasswordResetToken>()
+               .HasOne(prt => prt.User)
+               .WithMany(u => u.PasswordResetTokens)
+               .HasForeignKey(prt => prt.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
             /*
                         // Relacja między User a Review (N:1)
                         modelBuilder.Entity<Review>()
