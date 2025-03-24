@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Travels.Application.Dtos;
+using Travels.Application.Dtos.Reservation;
 using Travels.Application.Interfaces;
 using Travels.Domain.Entities;
 using Travels.Domain.Interfaces;
@@ -29,7 +29,7 @@ namespace Travels.Application.Services
             if (reservation == null)
                 throw new KeyNotFoundException("Reservation not found");
 
-            reservation.TravelOffer.AvailableSpots--;
+            reservation.TravelOffer.AvailableSpots++;
             await _reservationRepository.DeleteReservation(id);
         }
 
@@ -61,7 +61,7 @@ namespace Travels.Application.Services
 
             var reservation = _mapper.Map<Reservation>(reservationDto);
 
-            reservation.TravelOffer.AvailableSpots++;
+            reservation.TravelOffer.AvailableSpots--;
 
             await _reservationRepository.AddReservation(reservation);
         }
@@ -78,11 +78,7 @@ namespace Travels.Application.Services
             if (reservation == null)
                 throw new Exception("Reservation not found");
 
-
-            reservation.ReservationDate = reservationDto.ReservationDate;
-            reservation.TravelOfferId = reservationDto.TravelOfferId;
-            reservation.Status = reservationDto.Status;
-
+            var newReservaiton = _mapper.Map<Reservation>(reservationDto);
             await _reservationRepository.ChangeReservation(reservation);
         }
     }

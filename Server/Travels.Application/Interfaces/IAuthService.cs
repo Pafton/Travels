@@ -1,11 +1,13 @@
-﻿using Travels.Application.Dtos;
-using Travels.Domain.Entities;
+﻿    using Travels.Application.Dtos.Auth;
+    using Travels.Domain.Entities;
 
-namespace Travels.Application.Interfaces
-{
-    public interface IAuthService
+    namespace Travels.Application.Interfaces
     {
-        Task<bool> Register(RegisterDto registerDto);
-        Task<string?> Login(LoginDto loginDto);
+        public interface IAuthService
+        {
+            Task<bool> Register(RegisterDto registerDto);
+            Task<string?> Login(LoginDto loginDto);
+            Task<string> SendPasswordResetLink(string email);
+            Task ResetPassword(string token, string newPassword);
     }
 }

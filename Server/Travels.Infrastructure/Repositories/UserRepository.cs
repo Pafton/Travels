@@ -47,8 +47,11 @@ namespace Travels.Infrastructure.Repositories
             if (id == null)
                 return null;
 
-            return await _appDbContext.Users
-                .FirstOrDefaultAsync(u => u.Id == id);
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+        public async Task<User?> GetById(int? userId)
+        {
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);  
         }
 
         public async Task<IEnumerable<User>> GetUsers()

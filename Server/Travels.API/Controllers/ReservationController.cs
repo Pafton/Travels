@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Travels.Application.Dtos;
+using Travels.Application.Dtos.Reservation;
 using Travels.Application.Interfaces;
 
 namespace Travels.API.Controllers
