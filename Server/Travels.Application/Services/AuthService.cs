@@ -137,5 +137,25 @@ namespace Travels.Application.Services
             await _userRepository.ChangeUser(user);
             await _passwordResetTokenRepository.MarkTokenAsUsed(token);
         }
+
+        public async Task ResetPasswordForLoginUser(ForgotPasswordForLoginUserDto forgotPasswordForLoginUserDto, int id)
+        {
+            if (forgotPasswordForLoginUserDto == null)
+                throw new ArgumentNullException(nameof(forgotPasswordForLoginUserDto));
+
+            var user = await _userRepository.GetById(id);
+            if(user == null)
+                throw new ArgumentNullException("User not found");
+
+            var oldPassword = _passwordHasher.VerifyHashedPassword(user, user.Password, forgotPasswordForLoginUserDto.oldPassword);
+            if (oldPassword == PasswordVerificationResult.Failed)
+                throw new ArgumentException("Old password is not the same");
+
+            if(forgotPasswordForLoginUserDto.newPassword != forgotPasswordForLoginUserDto.confirmNewPassword)
+                throw new ArgumentException("New password is not the same");
+
+            user.Password = _passwordHasher.HashPassword(user, forgotPasswordForLoginUserDto.newPassword);
+            await _userRepository.ChangeUser(user);
+        }
     }
 }
