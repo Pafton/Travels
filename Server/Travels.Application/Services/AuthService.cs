@@ -55,7 +55,27 @@ namespace Travels.Application.Services
             user.Password = _passwordHasher.HashPassword(user, registerDto.Password);
             await _userRepository.AddUser(user);
 
+            var activationLink = $"http://localhost:5190/api/auth/activate-account/{user.Id}";
+                                  
+            await _emailSender.SendEmailAsync(user.Email, "Link activate", $"Click here to activate your account: {activationLink}");
+
             return true;
+        }
+        public async Task ActivateAccount(int id)
+        {
+            if (id < 0)
+                throw new ArgumentOutOfRangeException(nameof(id), "Invalid user ID");
+
+            var user = await _userRepository.GetById(id);
+            if (user == null)
+                throw new ArgumentNullException("User not found");
+
+            if (user.isActivate)
+                throw new Exception("Account is already activated");
+
+
+            user.isActivate = true;
+            await _userRepository.ChangeUser(user);
         }
 
         public async Task<string?> Login(LoginDto loginDto)
