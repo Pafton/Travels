@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Travels.Application.Dtos.Account;
 using Travels.Application.Dtos.Auth;
 using Travels.Application.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 [Route("User")]
 [ApiController]
@@ -26,22 +26,22 @@ public class AuthController : ControllerBase
         try
         {
             await _authService.ActivateAccount(id);
-            return Ok("Account activated successfully.");
+            return Ok("Status aktywacji został zmieniony.");
         }
         catch (ArgumentOutOfRangeException ex)
         {
-            Console.WriteLine($"Invalid user ID: {ex.Message}");
-            return BadRequest(new { error = "Invalid user ID" });
+            Console.WriteLine($">[AuthCtrl] Invalid user ID: {ex.Message}");
+            return BadRequest("Nieprawidłowy identyfikator użytkownika.");
         }
         catch (ArgumentNullException ex)
         {
-            Console.WriteLine($"User not found: {ex.Message}");
-            return NotFound(new { error = "User not found" });
+            Console.WriteLine($">[AuthCtrl] User not found: {ex.Message}");
+            return NotFound("Użytkownik nie został znaleziony.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during account activation: {ex.Message}");
-            return BadRequest(new { error = ex.Message });
+            Console.WriteLine($">[AuthCtrl] Error while activating account: {ex.Message}");
+            return BadRequest($"Błąd podczas aktywacji konta: {ex.Message}");
         }
     }
 
@@ -54,12 +54,12 @@ public class AuthController : ControllerBase
         try
         {
             var token = await _authService.SendPasswordResetLink(email);
-            return Ok("Password reset link sent successfully.");
+            return Ok("Link do resetu hasła został wysłany.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error sending password reset link: {ex.Message}");
-            return BadRequest(new { error = ex.Message });
+            Console.WriteLine($">[AuthCtrl] Error sending password reset link: {ex.Message}");
+            return BadRequest($"Błąd podczas wysyłania linku: {ex.Message}");
         }
     }
 
@@ -72,12 +72,12 @@ public class AuthController : ControllerBase
         try
         {
             await _authService.ResetPassword(resetPasswordDto.Token, resetPasswordDto.NewPassword);
-            return Ok("Password reset successfully.");
+            return Ok("Hasło zostało pomyślnie zresetowane.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error resetting password: {ex.Message}");
-            return BadRequest(new { error = ex.Message });
+            Console.WriteLine($">[AuthCtrl] Error resetting password: {ex.Message}");
+            return BadRequest($"Błąd podczas resetowania hasła: {ex.Message}");
         }
     }
 }

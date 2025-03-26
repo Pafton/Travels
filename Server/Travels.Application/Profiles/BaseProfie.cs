@@ -20,8 +20,6 @@ namespace Travels.Application.Profiles
 
             CreateMap<TravelOffer, TravelOfferDto>();
             CreateMap<TravelOfferDto, TravelOffer>();
-
-
         }
     }
 }
