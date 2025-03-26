@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 using Travels.Application.Dtos.Account;
 using Travels.Application.Dtos.Auth;
 using Travels.Application.Interfaces;
+using Travels.Application.Services;
 
 [Route("Account")]
 [ApiController]
@@ -31,7 +33,7 @@ public class AccountController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine($"Error during registration: {ex.Message}");
-            return BadRequest(ex.Message); // Prosta odpowiedź z samym komunikatem
+            return BadRequest(ex.Message);
         }
     }
 
@@ -66,6 +68,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("login")]
+    [Authorize(Roles = "Admin,Customer")]
     [SwaggerOperation(Summary = "Loguje użytkownika -- USER/ADMIN", Description = "Sprawdza dane logowania i zwraca token uwierzytelniający.")]
     [SwaggerResponse(200, "Zalogowano pomyślnie.", typeof(string))]
     [SwaggerResponse(401, "Nieprawidłowy e-mail lub hasło.")]
@@ -75,7 +78,7 @@ public class AccountController : ControllerBase
         try
         {
             var token = await _accountService.Login(loginDto);
-            return Ok(new { token });
+            return Ok(token);
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -111,6 +114,48 @@ public class AccountController : ControllerBase
         {
             Console.WriteLine($">[AccountCtrl] Error while setting activation status: {ex.Message}");
             return BadRequest($"Error while setting activation status: {ex.Message}");
+        }
+    }
+
+    [HttpPost("change-password")]
+    [Authorize(Roles = "Customer")]
+    [SwaggerOperation(Summary = "Zmienia zmiana hasła dla zalogowanego użytkownika -- CUSTOMER", Description = "Użytkonik może zmienić swoje hasło.")]
+    [SwaggerResponse(200, "Hasło zostało zmienione.")]
+    [SwaggerResponse(400, "Nieprawidłowe dane.")]
+    [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(ForgotPasswordForLoginUserDto forgotPasswordForLoginUserDto)
+    {
+        try
+        {
+            var userIdClaim = (User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID is missing in the token.");
+            }
+            var customerId = int.Parse(userIdClaim);
+            await _accountService.ResetPasswordForLoginUser(forgotPasswordForLoginUserDto, customerId);
+            return Ok("User change password");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($">[AuthCtr] Unauthorized access: {ex.Message}");
+            return Forbid("You are not authorized to perform this action.");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            Console.WriteLine($">[AuthCtr] User not found: {ex.Message}");
+            return NotFound("User not found in the database.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            Console.WriteLine($">[AuthCtr] Received null value: {ex.Message}");
+            return BadRequest($"Invalid data: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($">[AuthCtr] Unhandled exception: {ex.Message}");
+            return BadRequest($"Unexpected error: {ex.Message}");
         }
     }
 }

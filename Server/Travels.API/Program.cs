@@ -115,6 +115,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITravelOfferService, TravelOfferService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IResetTokenService, ResetTokenService>();
+builder.Services.AddScoped<IAccountService,AccountService>();
+
 
 //Password Hasher
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
