@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Travels.Application.Dtos.Account;
 using Travels.Application.Dtos.Auth;
 using Travels.Application.Interfaces;
 
-[Route("api/auth")]
+[Route("User")]
 [ApiController]
 public class AuthController : ControllerBase
 {
@@ -12,24 +14,6 @@ public class AuthController : ControllerBase
     public AuthController(IAuthService authService)
     {
         _authService = authService;
-    }
-
-    [HttpPost("register")]
-    [SwaggerOperation(Summary = "Rejestruje nowego użytkownika", Description = "Tworzy nowe konto użytkownika na podstawie podanych danych.")]
-    [SwaggerResponse(200, "Użytkownik został pomyślnie zarejestrowany.")]
-    [SwaggerResponse(400, "Błąd podczas rejestracji.")]
-    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
-    {
-        try
-        {
-            await _authService.Register(registerDto);
-            return Ok("User registered successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during registration: {ex.Message}");
-            return BadRequest(new { error = ex.Message });
-        }
     }
 
     [HttpGet("activate-account/{id}")]
@@ -57,30 +41,6 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine($"Error during account activation: {ex.Message}");
-            return BadRequest(new { error = ex.Message });
-        }
-    }
-
-    [HttpPost("login")]
-    [SwaggerOperation(Summary = "Loguje użytkownika", Description = "Sprawdza dane logowania i zwraca token uwierzytelniający.")]
-    [SwaggerResponse(200, "Zalogowano pomyślnie.", typeof(string))]
-    [SwaggerResponse(401, "Nieprawidłowy e-mail lub hasło.")]
-    [SwaggerResponse(400, "Błąd podczas logowania.")]
-    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
-    {
-        try
-        {
-            var token = await _authService.Login(loginDto);
-            return Ok(new { token });
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            Console.WriteLine($"Unauthorized login attempt: {ex.Message}");
-            return Unauthorized(new { error = "Invalid email or password" });
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Login error: {ex.Message}");
             return BadRequest(new { error = ex.Message });
         }
     }

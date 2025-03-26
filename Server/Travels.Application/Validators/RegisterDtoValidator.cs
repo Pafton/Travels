@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Travels.Application.Dtos.Auth;
+using Travels.Application.Dtos.Account;
 using Travels.Domain.Entities;
 
 namespace Travels.Application.Validators

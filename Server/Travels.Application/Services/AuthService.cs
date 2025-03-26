@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Travels.Application.Dtos.Auth;
 using Travels.Application.Interfaces;
 using Travels.Domain.Entities;
 using Travels.Domain.Interfaces;
@@ -10,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Scholario.Application.Authentication;
+using Travels.Application.Dtos.Account;
 
 namespace Travels.Application.Services
 {
@@ -43,24 +43,6 @@ namespace Travels.Application.Services
             _passwordResetTokenRepository = passwordResetTokenRepository;
         }
 
-        public async Task<bool> Register(RegisterDto registerDto)
-        {
-            var existingUser = await _userRepository.GetByEmail(registerDto.Email);
-            if (existingUser != null)
-                throw new Exception("User already exists");
-
-            var user = _mapper.Map<User>(registerDto);
-            user.Role = Role.Customer;
-
-            user.Password = _passwordHasher.HashPassword(user, registerDto.Password);
-            await _userRepository.AddUser(user);
-
-            var activationLink = $"http://localhost:5190/api/auth/activate-account/{user.Id}";
-                                  
-            await _emailSender.SendEmailAsync(user.Email, "Link activate", $"Click here to activate your account: {activationLink}");
-
-            return true;
-        }
         public async Task ActivateAccount(int id)
         {
             if (id < 0)
@@ -76,45 +58,6 @@ namespace Travels.Application.Services
 
             user.isActivate = true;
             await _userRepository.ChangeUser(user);
-        }
-
-        public async Task<string?> Login(LoginDto loginDto)
-        {
-            var user = await _userRepository.GetByEmail(loginDto.Email);
-            if (user == null)
-                throw new Exception("User not found");
-
-            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginDto.Password);
-
-            if (passwordVerificationResult == PasswordVerificationResult.Failed)
-                throw new UnauthorizedAccessException("Invalid email or password");
-
-            return GenerateJwtToken(user);
-        }
-
-        private string GenerateJwtToken(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.Name} {user.Surname}"),
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddMinutes(_authenticationSettings.JwtExpireMinutes);
-
-            var token = new JwtSecurityToken(
-                _authenticationSettings.JwtIssuer,
-                _authenticationSettings.JwtIssuer,
-                claims,
-                expires: expires,
-                signingCredentials: cred);
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
         }
 
         public async Task<string> SendPasswordResetLink(string email)
