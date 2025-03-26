@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Travels.Application.Dtos.Auth;
+using Travels.Application.Dtos.Account;
 using Travels.Application.Dtos.Reservation;
 using Travels.Application.Dtos.Travel;
 using Travels.Application.Services;
