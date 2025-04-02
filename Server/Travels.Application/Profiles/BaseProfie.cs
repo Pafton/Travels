@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Travels.Application.Dtos.Account;
 using Travels.Application.Dtos.Reservation;
+using Travels.Application.Dtos.Review;
 using Travels.Application.Dtos.Travel;
 using Travels.Application.Services;
 using Travels.Domain.Entities;
@@ -20,6 +21,9 @@ namespace Travels.Application.Profiles
 
             CreateMap<TravelOffer, TravelOfferDto>();
             CreateMap<TravelOfferDto, TravelOffer>();
+
+            CreateMap<Review, ReviewDto>();
+            CreateMap<ReviewDto,Review>();
         }
     }
 }
