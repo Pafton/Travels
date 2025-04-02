@@ -59,8 +59,11 @@ namespace Travels.Application.Services
             if (user == null)
                 throw new Exception("User not found");
 
-            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginDto.Password);
+            if (!user.isActivate)
+                throw new Exception("Account is not active");
 
+
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.Password, loginDto.Password);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
                 throw new UnauthorizedAccessException("Invalid email or password");
 
