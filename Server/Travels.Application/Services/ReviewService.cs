@@ -32,10 +32,11 @@ namespace Travels.Application.Services
 
             if (userId.HasValue)
             {
+                // Zalogowany użytkownik
                 var user = await _userRepository.GetById(userId.Value);
                 if (user != null)
                 {
-                    reviewDto.UserName = user.Name;
+                    reviewDto.UserName = user.Name; // Ustawiamy imię zalogowanego użytkownika
                 }
                 else
                 {
@@ -44,16 +45,17 @@ namespace Travels.Application.Services
             }
             else
             {
-                var guestUserId = Guid.NewGuid().ToString();
-                reviewDto.UserName = guestUserId;
+                // Niezalogowany użytkownik - generujemy losowe imię
+                reviewDto.UserName = Guid.NewGuid().ToString(); // Generujemy losowe imię dla gościa
             }
 
             var travelOffer = await _travelOfferRepository.GetTravel(reviewDto.TravelOfferId);
             if (travelOffer == null)
                 throw new ArgumentException("Travel offer not found");
 
+            // Mapowanie DTO na encję Review
             var review = _mapper.Map<Review>(reviewDto);
-            await _reviewRepository.AddReview(review);
+            await _reviewRepository.AddReview(review); // Zapisujemy recenzję
         }
 
 
@@ -72,9 +74,14 @@ namespace Travels.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Review>> GetReviews(ReviewDto reviewDto)
+        public async Task<IEnumerable<ReviewDto>> GetReviews()
         {
-            throw new NotImplementedException();
+            var reviews = await _reviewRepository.GetReviews();
+            if (reviews == null)
+                throw new ArgumentNullException("Review not found");
+
+            var reviewDtos =  _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+            return reviewDtos;
         }
     }
 }

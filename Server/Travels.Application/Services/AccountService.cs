@@ -136,5 +136,14 @@ namespace Travels.Application.Services
             user.isActivate = isActive;
             await _userRepository.ChangeUser(user);
         }
+
+        public async Task<IEnumerable<UserListItemDto>> GetAllUsers()
+        {
+            var users = await _userRepository.GetUsers();
+            if (users == null)
+                throw new ArgumentNullException("Users not found or not existed");
+
+            return _mapper.Map<IEnumerable<UserListItemDto>>(users);
+        }
     }
 }

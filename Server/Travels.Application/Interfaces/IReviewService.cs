@@ -11,7 +11,7 @@ namespace Travels.Application.Interfaces
     public interface IReviewService
     {
         Task AddReview(ReviewDto reviewDto,int? userId);
-        Task<IEnumerable<Review>> GetReviews(ReviewDto reviewDto);
+        Task<IEnumerable<ReviewDto>> GetReviews();
         Task ChangeReview(ReviewDto reviewDto);
         Task DeleteReview(ReviewDto reviewDto);
     }

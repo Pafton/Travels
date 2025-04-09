@@ -22,8 +22,11 @@ namespace Travels.Application.Profiles
             CreateMap<TravelOffer, TravelOfferDto>();
             CreateMap<TravelOfferDto, TravelOffer>();
 
-            CreateMap<Review, ReviewDto>();
+            CreateMap<Review, ReviewDto>()
+                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name));
             CreateMap<ReviewDto,Review>();
+
+            CreateMap<User, UserListItemDto>();
         }
     }
 }

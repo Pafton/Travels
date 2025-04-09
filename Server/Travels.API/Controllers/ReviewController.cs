@@ -19,7 +19,7 @@ namespace Travels.API.Controllers
             _reviewservice = reviewservice;
         }
 
-        [HttpPost] // TODO: id użytkownika pobierane z tokenu
+        [HttpPost]
         [SwaggerOperation(Summary = "Dodaje recenzję do oferty wycieczki", Description = "Umożliwia dodanie recenzji dla wybranej oferty wycieczki. Recenzja zawiera komentarz, ocenę oraz identyfikator użytkownika.")]
         [SwaggerResponse(200, "Recenzja została pomyślnie dodana.")]
         [SwaggerResponse(400, "Nieprawidłowe dane wejściowe lub brak wymaganych pól w żądaniu.")]
@@ -56,5 +56,30 @@ namespace Travels.API.Controllers
             }
         }
 
+        [HttpGet]
+        [SwaggerOperation(Summary = "Pobiera recenzje dla wybranej oferty wycieczki", Description = "Umożliwia pobranie wszystkich recenzji dla oferty wycieczki. Recenzje zawierają komentarze, oceny, użytkowników oraz daty dodania.")]
+        [SwaggerResponse(200, "Recenzje zostały pomyślnie pobrane.")]
+        [SwaggerResponse(400, "Nieprawidłowe dane wejściowe.")]
+        [SwaggerResponse(404, "Nie znaleziono recenzji dla tej oferty.")]
+        [SwaggerResponse(500, "Wystąpił błąd serwera podczas pobierania recenzji.")]
+        public async Task<IActionResult> GetReviews()
+        {
+            try
+            {
+                var reviews = await _reviewservice.GetReviews();
+
+                if (reviews == null || !reviews.Any())
+                {
+                    return NotFound("Recenzje nie zostały znalezione.");
+                }
+
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[ReviewCtl] Unhandled exception: {ex.Message}");
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
+        }
     }
 }
