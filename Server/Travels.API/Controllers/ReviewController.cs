@@ -29,9 +29,19 @@ namespace Travels.API.Controllers
         {
             try
             {
-                var userIdClaim = (User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-                var userId = int.Parse(userIdClaim);
-                await _reviewservice.AddReview(reviewDto,userId);
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userIdClaim != null)
+                {
+                    var userId = int.Parse(userIdClaim);
+                    await _reviewservice.AddReview(reviewDto, userId);
+                }
+                else
+                {
+                    var guestUserId = Guid.NewGuid().ToString();
+                    reviewDto.UserName = guestUserId;
+                    await _reviewservice.AddReview(reviewDto, null);
+                }
+
                 return Ok(new { message = "Review created successfully" });
             }
             catch (ArgumentNullException ex)

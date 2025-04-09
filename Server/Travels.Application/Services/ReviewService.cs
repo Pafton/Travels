@@ -25,20 +25,27 @@ namespace Travels.Application.Services
             _reviewRepository = reviewRepository;
             _mapper = mapper;
         }
-        public async Task AddReview(ReviewDto reviewDto,int? userId)
+        public async Task AddReview(ReviewDto reviewDto, int? userId)
         {
-            if(reviewDto == null)
+            if (reviewDto == null)
                 throw new ArgumentNullException(nameof(reviewDto));
 
-            var user = await _userRepository.GetById(userId);
-            if (user == null)
+            if (userId.HasValue)
             {
-                var guessUserId = Guid.NewGuid().ToString();
-                reviewDto.UserName = guessUserId;
+                var user = await _userRepository.GetById(userId.Value);
+                if (user != null)
+                {
+                    reviewDto.UserName = user.Name;
+                }
+                else
+                {
+                    throw new ArgumentException("User not found");
+                }
             }
             else
             {
-                reviewDto.UserName = user.Name;
+                var guestUserId = Guid.NewGuid().ToString();
+                reviewDto.UserName = guestUserId;
             }
 
             var travelOffer = await _travelOfferRepository.GetTravel(reviewDto.TravelOfferId);
@@ -47,8 +54,8 @@ namespace Travels.Application.Services
 
             var review = _mapper.Map<Review>(reviewDto);
             await _reviewRepository.AddReview(review);
-
         }
+
 
         public async Task ChangeReview(ReviewDto reviewDto)
         {
