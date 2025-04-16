@@ -20,7 +20,7 @@ public class AccountController : ControllerBase
 
     [HttpPost("register")]
     [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Rejestruje nowego użytkownika -- ADMIN", Description = "Tworzy nowe konto użytkownika na podstawie podanych danych.")]
+    [SwaggerOperation(Summary = "Rejestruje nowego użytkownika",Description = "Rejestruje użytkownika i wysyła link aktywacyjny na e-mail. Format linka: http://localhost:5190/User/activate-account/{userId}")]
     [SwaggerResponse(200, "Użytkownik został pomyślnie zarejestrowany.")]
     [SwaggerResponse(400, "Błąd podczas rejestracji.")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
@@ -68,8 +68,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("login")]
-    [Authorize(Roles = "Admin,Customer")]
-    [SwaggerOperation(Summary = "Loguje użytkownika -- USER/ADMIN", Description = "Sprawdza dane logowania i zwraca token uwierzytelniający.")]
+    [SwaggerOperation(Summary = "Loguje użytkownika", Description = "Sprawdza dane logowania i zwraca token uwierzytelniający.")]
     [SwaggerResponse(200, "Zalogowano pomyślnie.", typeof(string))]
     [SwaggerResponse(401, "Nieprawidłowy e-mail lub hasło.")]
     [SwaggerResponse(400, "Błąd podczas logowania.")]
@@ -158,4 +157,25 @@ public class AccountController : ControllerBase
             return BadRequest($"Unexpected error: {ex.Message}");
         }
     }
+
+    [HttpGet("admin/users")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Pobiera listę wszystkich użytkowników -- ADMIN", Description = "Zwraca ID, email i zahashowane hasło użytkowników.")]
+    [SwaggerResponse(200, "Zwrócono listę użytkowników.", typeof(IEnumerable<UserListItemDto>))]
+    [SwaggerResponse(403, "Brak dostępu.")]
+    [SwaggerResponse(500, "Błąd serwera.")]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        try
+        {
+            var users = await _accountService.GetAllUsers();
+            return Ok(users);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($">[AccountCtrl] GetAllUsers error: {ex.Message}");
+            return StatusCode(500, "Wystąpił błąd podczas pobierania listy użytkowników.");
+        }
+    }
+
 }

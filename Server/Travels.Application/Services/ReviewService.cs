@@ -44,8 +44,7 @@ namespace Travels.Application.Services
             }
             else
             {
-                var guestUserId = Guid.NewGuid().ToString();
-                reviewDto.UserName = guestUserId;
+                reviewDto.UserName = "Anonim";
             }
 
             var travelOffer = await _travelOfferRepository.GetTravel(reviewDto.TravelOfferId);
@@ -72,9 +71,14 @@ namespace Travels.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Review>> GetReviews(ReviewDto reviewDto)
+        public async Task<IEnumerable<ReviewDto>> GetReviews()
         {
-            throw new NotImplementedException();
+            var reviews = await _reviewRepository.GetReviews();
+            if (reviews == null)
+                throw new ArgumentNullException("Review not found");
+
+            var reviewDtos =  _mapper.Map<IEnumerable<ReviewDto>>(reviews);
+            return reviewDtos;
         }
     }
 }

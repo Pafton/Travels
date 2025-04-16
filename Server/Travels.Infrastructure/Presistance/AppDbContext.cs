@@ -71,13 +71,14 @@ namespace Travels.Infrastructure.Presistance
                .WithMany(u => u.PasswordResetTokens)
                .HasForeignKey(prt => prt.UserId)
                .OnDelete(DeleteBehavior.Cascade);
-            /*
-                        // Relacja między User a Review (N:1)
-                        modelBuilder.Entity<Review>()
-                            .HasOne(u => u.User)
-                            .WithMany(r => r.Reviews)
-                            .HasForeignKey(r => r.UserIdentifier)
-                            .OnDelete(DeleteBehavior.Restrict);*/
+            
+            // Relacja między User a Review (N:1)
+            modelBuilder.Entity<Review>()
+                .HasOne(u => u.User)
+                .WithMany(r => r.Reviews)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
         }
     }

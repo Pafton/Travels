@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Travels.Infrastructure.Presistance;
 
@@ -11,9 +12,11 @@ using Travels.Infrastructure.Presistance;
 namespace Travels.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409101555_AddNewFIeldToReview")]
+    partial class AddNewFIeldToReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,16 +189,13 @@ namespace Travels.Infrastructure.Migrations
                     b.Property<bool>("IsEditable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("NotLogginUser")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int>("TravelOfferId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -372,7 +372,8 @@ namespace Travels.Infrastructure.Migrations
                     b.HasOne("Travels.Domain.Entities.User", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("TravelOffer");
 

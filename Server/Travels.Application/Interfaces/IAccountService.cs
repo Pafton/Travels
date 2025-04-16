@@ -14,5 +14,7 @@ namespace Travels.Application.Interfaces
         Task Delete(int id);
         Task SetActivationStatus(int id, bool isActive);
         Task ResetPasswordForLoginUser(ForgotPasswordForLoginUserDto forgotPasswordForLoginUserDto, int id);
+        Task<IEnumerable<UserListItemDto>> GetAllUsers();
+
     }
 }
