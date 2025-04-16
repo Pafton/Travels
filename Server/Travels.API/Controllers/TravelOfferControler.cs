@@ -5,6 +5,7 @@ using Travels.Application.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Travels.API.Controllers
 {
@@ -59,7 +60,8 @@ namespace Travels.API.Controllers
         }
 
         [HttpPost("CreateTravel")]
-        [SwaggerOperation(Summary = "Tworzy nową ofertę podróży", Description = "Tworzy nową ofertę podróży na podstawie przekazanych danych.")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Tworzy nową ofertę podróży -- ADMIN", Description = "Tworzy nową ofertę podróży na podstawie przekazanych danych.")]
         [SwaggerResponse(201, "Oferta podróży została pomyślnie utworzona.")]
         [SwaggerResponse(400, "Nieprawidłowe dane oferty podróży.")]
         [SwaggerResponse(404, "Nie znaleziono docelowej destynacji.")]
@@ -77,7 +79,8 @@ namespace Travels.API.Controllers
         }
 
         [HttpDelete("DeleteTravel/{id}")]
-        [SwaggerOperation(Summary = "Usuwa ofertę podróży o podanym ID", Description = "Usuwa ofertę podróży na podstawie identyfikatora.")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Usuwa ofertę podróży o podanym ID -- ADMIN", Description = "Usuwa ofertę podróży na podstawie identyfikatora.")]
         [SwaggerResponse(200, "Oferta podróży została pomyślnie usunięta.")]
         [SwaggerResponse(400, "Nieprawidłowe ID oferty podróży.")]
         [SwaggerResponse(404, "Oferta podróży nie została znaleziona.")]
@@ -99,7 +102,8 @@ namespace Travels.API.Controllers
         }
 
         [HttpPut("UpdateTravel/{id}")]
-        [SwaggerOperation(Summary = "Aktualizuje ofertę podróży o podanym ID", Description = "Aktualizuje ofertę podróży na podstawie przekazanych danych.")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Aktualizuje ofertę podróży o podanym ID -- ADMIN", Description = "Aktualizuje ofertę podróży na podstawie przekazanych danych.")]
         [SwaggerResponse(200, "Oferta podróży została pomyślnie zaktualizowana.")]
         [SwaggerResponse(400, "Nieprawidłowe dane oferty podróży.")]
         public async Task<IActionResult> UpdateTravel([FromBody] TravelOfferDto travelOfferDto, int id)
