@@ -34,18 +34,13 @@ namespace Travels.Application.Services
             {
                 var user = await _userRepository.GetById(userId.Value);
                 if (user != null)
-                {
                     reviewDto.UserName = user.Name;
-                }
                 else
-                {
                     throw new ArgumentException("User not found");
-                }
             }
             else
-            {
                 reviewDto.UserName = "Anonim";
-            }
+            
 
             var travelOffer = await _travelOfferRepository.GetTravel(reviewDto.TravelOfferId);
             if (travelOffer == null)
@@ -64,11 +59,21 @@ namespace Travels.Application.Services
             var review = await _reviewRepository.GetReview(reviewDto.Id);
             if (review == null)
                 throw new ArgumentException("Review not found");
-        }
 
-        public Task DeleteReview(ReviewDto reviewDto)
+            var ReviewDto = _mapper.Map<Review>(reviewDto);
+
+            await _reviewRepository.ChangeReview(ReviewDto);
+        }
+        public async Task DeleteReview(int id)
         {
-            throw new NotImplementedException();
+            if (id >= 0)
+                throw new ArgumentOutOfRangeException("Id not found");
+
+            var review = await _reviewRepository.GetReview(id);
+            if (review == null)
+                throw new ArgumentException("Review not found");
+
+            await _reviewRepository.DeleteReview(id);
         }
 
         public async Task<IEnumerable<ReviewDto>> GetReviews()
