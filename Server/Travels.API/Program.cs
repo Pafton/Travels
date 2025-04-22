@@ -123,6 +123,13 @@ builder.Services.AddScoped<IReviewService,ReviewService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 
+// --------- LLM ------------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<IModelLLMService, ModelLLMService>();
+builder.Services.AddScoped<IModelLLMService, ModelLLMService>();
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
