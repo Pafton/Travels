@@ -21,88 +21,97 @@ namespace Travels.Application.Services
         {
             _httpClient = httpClient;
             _configuration = configuration;
-
-            // Pobierz API Key z konfiguracji
             var apiKey = configuration.GetValue<string>("LLMApi:ApiKey");
-            // URL API Gemini do generowania treści
             _apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}";
-                        
         }
 
-        // Metoda do pobrania odpowiedzi od Gemini z danymi turystycznymi
+        // Jeden wspólny prompt do generowania listy obiektów turystycznych
+        private readonly string _prompt = @"Wygeneruj listę 5 obiektów turystycznych w formacie JSON.
+                Każdy obiekt powinien mieć następujące właściwości:
+                - Id (int),
+                - Kraj
+                - Miasto (miasto gdzie znajduje się atrakcja)
+                - Nazwa (nazwa miejsca),
+                - Opis (krótki opis miejsca),
+                - Kategoria (typ atrakcji: np. Kultura i Historia, Natura i Przygoda, Plaże i Krajobrazy)";
+
+        // Metoda do pobierania listy obiektów turystycznych
         public async Task<List<MyModel>> GetListFromLLMAsync()
         {
-            // Przykładowy prompt do Gemini
-            var prompt = @"Wygeneruj listę 5 obiektów turystycznych w formacie JSON.
-                            Każdy obiekt powinien mieć następujące właściwości:
-                            - Id (string),
-                            - Index (int),
-                            - Guid (format GUID),
-                            - IsActive (true/false),
-                            - Balance (string z $),
-                            - Picture (url do zdjęcia),
-                            - Name (nazwa miejsca),
-                            - Location (nazwa miasta i kraju),
-                            - Height (int w metrach),
-                            - Length (int w metrach),
-                            - YearBuilt (rok budowy),
-                            - Type (typ atrakcji: muzeum, park, pomnik itp.),
-                            - Description (krótki opis),
-                            - Tags (lista 3 tagów w formie listy tekstów)";
-
-            // Pobierz odpowiedź z Gemini
-            var responseJson = await GetResponseFromGeminiAsync(prompt);
-
-            // Zdeserializuj odpowiedź w JSON-ie do listy obiektów MyModel
+            var responseJson = await GetResponseFromGeminiAsync();
             var list = JsonConvert.DeserializeObject<List<MyModel>>(responseJson);
             return list;
         }
 
-        // Metoda do pobrania odpowiedzi z Gemini, zwracająca treść
-        public async Task<string> GetResponseFromGeminiAsync(string prompt)
+        // Metoda do pobierania odpowiedzi z Gemini
+        private async Task<string> GetResponseFromGeminiAsync()
         {
-            // Tworzenie ciała zapytania
             var requestBody = new
             {
                 contents = new[] {
                     new
                     {
-                        parts = new[] { new { text = prompt } }
+                        parts = new[] { new { text = _prompt } }
                     }
                 }
             };
 
-            // Serializowanie do JSON
             var json = JsonConvert.SerializeObject(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // Wykonanie zapytania POST do API
             var response = await _httpClient.PostAsync(_apiUrl, content);
             response.EnsureSuccessStatusCode();
 
-            // Odczytanie odpowiedzi i deserializacja
             var responseBody = await response.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject(responseBody);
 
-            // Zwrócenie tekstu z odpowiedzi
             string text = result.candidates[0].content.parts[0].text;
-
-            // Zwrócenie odpowiedzi w postaci JSON
+            text = CleanJson(text);
             return text;
         }
 
-        // Metoda do pobrania obiektu po ID
-        public async Task<MyModel> GetObjectByIdFromLLMAsync(int id)
+        // Metoda do czyszczenia odpowiedzi JSON
+        private string CleanJson(string rawText)
         {
-            var list = await GetListFromLLMAsync();
-            return list.FirstOrDefault(x => x.Index == id);
+            if (string.IsNullOrWhiteSpace(rawText))
+                return rawText;
+
+            rawText = rawText.Trim();
+
+            if (rawText.StartsWith("```json"))
+            {
+                rawText = rawText.Substring(6).Trim();
+            }
+            if (rawText.StartsWith("```"))
+            {
+                rawText = rawText.Substring(3).Trim();
+            }
+            if (rawText.EndsWith("```"))
+            {
+                rawText = rawText.Substring(0, rawText.Length - 3).Trim();
+            }
+
+            int index = rawText.IndexOfAny(new char[] { '{', '[' });
+            if (index >= 0)
+            {
+                rawText = rawText.Substring(index);
+            }
+
+            return rawText;
         }
 
-        // Metoda do filtrowania obiektów na podstawie typu
-        public async Task<List<MyModel>> GetFilteredObjectsFromLLMAsync(string filter)
+        // Metoda do pobierania obiektu turystycznego po ID
+        public async Task<MyModel> GetObjectByIdAsync(int id)
         {
             var list = await GetListFromLLMAsync();
-            return list.Where(x => x.Type.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
+            return list.FirstOrDefault(x => x.Id == id);
+        }
+
+        // Metoda do filtrowania obiektów turystycznych na podstawie frazy w nazwie
+        public async Task<List<MyModel>> GetFilteredObjectsAsync(string filter)
+        {
+            var list = await GetListFromLLMAsync();
+            return list.Where(x => x.Miasto.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Travels.Application.Interfaces;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Travels.API.Controllers
@@ -15,16 +16,20 @@ namespace Travels.API.Controllers
             _modelLLMService = modelLLMService;
         }
 
-        // Endpoint do pobrania odpowiedzi z Gemini
-        [HttpGet("response")]
-        public async Task<IActionResult> GetLLMResponse()
+        // Endpoint do pobierania obiektów turystycznych
+        [HttpGet("list")]
+        public async Task<IActionResult> GetListFromLLM()
         {
             try
             {
-                // Używamy właściwej metody GetResponseFromGeminiAsync
-                var prompt = "Podaj mi 10 najciekawszych miejsc na podróż. Odpowiedz zwroc w postacji json. Kazde miejse ma miec id";
-                var response = await _modelLLMService.GetResponseFromGeminiAsync(prompt);
-                return Ok(response);  // Zwracamy odpowiedź jako tekst
+                var list = await _modelLLMService.GetListFromLLMAsync();
+
+                if (list == null || !list.Any())
+                {
+                    return NotFound("Brak obiektów turystycznych.");
+                }
+
+                return Ok(list);  // Zwrócenie listy obiektów
             }
             catch (Exception ex)
             {
@@ -32,23 +37,20 @@ namespace Travels.API.Controllers
             }
         }
 
-        [HttpGet("response/{id}")]
+        // Endpoint do pobrania obiektu po ID
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetObjectById(int id)
         {
             try
             {
-                // Pobranie listy obiektów
-                var list = await _modelLLMService.GetListFromLLMAsync();
-
-                // Wyszukiwanie obiektu po ID (w tym przypadku po indeksie)
-                var selectedObject = list.FirstOrDefault(x => x.Index == id);
+                var selectedObject = await _modelLLMService.GetObjectByIdAsync(id);
 
                 if (selectedObject == null)
                 {
                     return NotFound("Obiekt o podanym numerze nie został znaleziony.");
                 }
 
-                return Ok(selectedObject);  // Zwracamy znaleziony obiekt
+                return Ok(selectedObject);
             }
             catch (Exception ex)
             {
@@ -56,18 +58,20 @@ namespace Travels.API.Controllers
             }
         }
 
-        [HttpGet("response/filter")]
+        // Endpoint do filtrowania obiektów turystycznych
+        [HttpGet("filter")]
         public async Task<IActionResult> GetFilteredObjects([FromQuery] string filter)
         {
             try
             {
-                // Pobranie listy obiektów
-                var list = await _modelLLMService.GetListFromLLMAsync();
+                if (string.IsNullOrWhiteSpace(filter))
+                {
+                    return BadRequest("Filtr nie może być pusty.");
+                }
 
-                // Filtrowanie obiektów na podstawie typu (przykład z filtrowaniem po 'Type')
-                var filteredList = list.Where(x => x.Type.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
+                var filteredList = await _modelLLMService.GetFilteredObjectsAsync(filter);
 
-                if (!filteredList.Any())
+                if (filteredList == null || !filteredList.Any())
                 {
                     return NotFound("Nie znaleziono obiektów spełniających podane kryterium.");
                 }
@@ -79,6 +83,5 @@ namespace Travels.API.Controllers
                 return BadRequest($"Wystąpił błąd: {ex.Message}");
             }
         }
-
     }
 }
