@@ -25,7 +25,6 @@ namespace Travels.Application.Services
             _apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}";
         }
 
-        // Jeden wspólny prompt do generowania listy obiektów turystycznych
         private readonly string _prompt = @"Wygeneruj listę 5 obiektów turystycznych w formacie JSON.
                 Każdy obiekt powinien mieć następujące właściwości:
                 - Id (int),
@@ -35,7 +34,6 @@ namespace Travels.Application.Services
                 - Opis (krótki opis miejsca),
                 - Kategoria (typ atrakcji: np. Kultura i Historia, Natura i Przygoda, Plaże i Krajobrazy)";
 
-        // Metoda do pobierania listy obiektów turystycznych
         public async Task<List<MyModel>> GetListFromLLMAsync()
         {
             var responseJson = await GetResponseFromGeminiAsync();
@@ -43,7 +41,6 @@ namespace Travels.Application.Services
             return list;
         }
 
-        // Metoda do pobierania odpowiedzi z Gemini
         private async Task<string> GetResponseFromGeminiAsync()
         {
             var requestBody = new
@@ -70,7 +67,6 @@ namespace Travels.Application.Services
             return text;
         }
 
-        // Metoda do czyszczenia odpowiedzi JSON
         private string CleanJson(string rawText)
         {
             if (string.IsNullOrWhiteSpace(rawText))
@@ -100,14 +96,12 @@ namespace Travels.Application.Services
             return rawText;
         }
 
-        // Metoda do pobierania obiektu turystycznego po ID
         public async Task<MyModel> GetObjectByIdAsync(int id)
         {
             var list = await GetListFromLLMAsync();
             return list.FirstOrDefault(x => x.Id == id);
         }
 
-        // Metoda do filtrowania obiektów turystycznych na podstawie frazy w nazwie
         public async Task<List<MyModel>> GetFilteredObjectsAsync(string filter)
         {
             var list = await GetListFromLLMAsync();
