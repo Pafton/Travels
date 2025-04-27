@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using Travels.Application.Dtos.Account;
-using Travels.Application.Dtos.Auth;
 using Travels.Application.Interfaces;
-using Travels.Application.Services;
 
-[Route("Account")]
 [ApiController]
+[Route("api/[controller]")]
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;

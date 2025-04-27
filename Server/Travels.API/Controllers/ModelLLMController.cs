@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Travels.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ModelLLMController : ControllerBase
     {
         private readonly IModelLLMService _modelLLMService;

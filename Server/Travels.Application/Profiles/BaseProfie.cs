@@ -22,10 +22,14 @@ namespace Travels.Application.Profiles
             CreateMap<TravelOffer, TravelOfferDto>();
             CreateMap<TravelOfferDto, TravelOffer>();
 
-            CreateMap<Review, ReviewDto>();
-                //.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => ResolveUserName(src)));
+            CreateMap<Review, ReviewDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src =>
+                    src.UserId.HasValue ? src.User.Name : src.NotLogginUser));
 
-            CreateMap<ReviewDto,Review>();
+            CreateMap<ReviewDto, Review>()
+                .ForMember(dest => dest.User, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.NotLogginUser, opt => opt.Ignore());
 
             CreateMap<User, UserListItemDto>();
         }
