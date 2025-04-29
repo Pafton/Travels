@@ -12,7 +12,8 @@ namespace Travels.Application.Interfaces
         Task<bool> Register(RegisterDto registerDto);
         Task<string?> Login(LoginDto loginDto);
         Task Delete(int id);
-        Task SetActivationStatus(int id, bool isActive);
+        Task SetActivationStatus(int id);
+        Task DeactivateAccount(int id);
         Task ResetPasswordForLoginUser(ForgotPasswordForLoginUserDto forgotPasswordForLoginUserDto, int id);
         Task<IEnumerable<UserListItemDto>> GetAllUsers();
 

@@ -89,17 +89,41 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPatch("set-activation/{id}")]
-    [Authorize(Roles = "Admin")]
-    [SwaggerOperation(Summary = "Zmienia status aktywacji użytkownika -- ADMIN", Description = "Administrator może aktywować lub dezaktywować konto użytkownika.")]
+    [HttpGet("set-activation/{id}")]
+    [SwaggerOperation(Summary = "Zmienia status aktywacji użytkownika -- User", Description = "User może aktywować  konto użytkownika za pomocą linku z maila.")]
     [SwaggerResponse(200, "Status aktywacji został zmieniony.")]
     [SwaggerResponse(400, "Nieprawidłowe dane.")]
     [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
-    public async Task<IActionResult> SetActivationStatus(int id, [FromBody] bool isActive)
+    public async Task<IActionResult> SetActivationStatus(int id)
     {
         try
         {
-            await _accountService.SetActivationStatus(id, isActive);
+            await _accountService.SetActivationStatus(id);
+            return Ok("Status aktywacji został zmieniony.");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            Console.WriteLine($">[AccountCtrl] User not found: {ex.Message}");
+            return NotFound("Użytkownik nie został znaleziony.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($">[AccountCtrl] Error while setting activation status: {ex.Message}");
+            return BadRequest($"Error while setting activation status: {ex.Message}");
+        }
+    }
+
+    [HttpPatch("set-activation/{id}")]
+    [Authorize(Roles = "Admin")]
+    [SwaggerOperation(Summary = "Zmienia status aktywacji użytkownika -- ADMIN", Description = "Administrator może dezaktywować konto użytkownika.")]
+    [SwaggerResponse(200, "Status aktywacji został zmieniony.")]
+    [SwaggerResponse(400, "Nieprawidłowe dane.")]
+    [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
+    public async Task<IActionResult> DeactivateAccount(int id)
+    {
+        try
+        {
+            await _accountService.DeactivateAccount(id);
             return Ok("Status aktywacji został zmieniony.");
         }
         catch (KeyNotFoundException ex)
