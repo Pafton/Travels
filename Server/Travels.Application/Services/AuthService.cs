@@ -78,9 +78,9 @@ namespace Travels.Application.Services
             };
             await _passwordResetTokenRepository.AddToken(resetToken);
 
-            var resetLink = $"https://travel/reset-password?token={token}";
+            var resetLink = $"{token}";
 
-            await _emailSender.SendEmailAsync(email, "Password Reset", $"Click here to reset your password: {resetLink}");
+            await _emailSender.SendEmailAsync(email, "Password Reset", $"This is token necessery to reset password: {resetLink}");
 
             return token;
         }

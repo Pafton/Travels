@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
 
 
     [HttpPost("send-password-reset-link")]
-    [SwaggerOperation(Summary = "Wysyła link do resetu hasła", Description = "Wysyła e-mail z linkiem do resetu hasła dla podanego adresu e-mail.")]
+    [SwaggerOperation(Summary = "Wysyła na maila token potrzebny do zmiany hasla", Description = "Wysyła e-mail z linkiem do resetu hasła dla podanego adresu e-mail.")]
     [SwaggerResponse(200, "Link do resetu hasła został wysłany.")]
     [SwaggerResponse(400, "Błąd podczas wysyłania linku.")]
     public async Task<IActionResult> SendPasswordResetLink([FromBody] string email)
