@@ -5,7 +5,7 @@ services:
     container_name: travels-api
     image: ${DOCKER_REGISTRY-}travelsapi
     ports:
-      - "5010:80"  
+      - "5190:80"  
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -13,3 +13,14 @@ services:
     build:
       context: .
       dockerfile: Server/Travels.API/Dockerfile
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    network_mode: bridge
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrongPassword123"
+    volumes:
+     - "D:/Programowanie/PracaMagisterska/DockerDB/BazyPliki/mssql:/var/opt/mssql/data"

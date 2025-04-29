@@ -13,6 +13,6 @@ namespace Travels.Application.Interfaces
         Task AddReview(ReviewDto reviewDto,int? userId);
         Task<IEnumerable<ReviewDto>> GetReviews();
         Task ChangeReview(ReviewDto reviewDto);
-        Task DeleteReview(ReviewDto reviewDto);
+        Task DeleteReview(int id);
     }
 }

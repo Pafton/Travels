@@ -30,28 +30,36 @@ namespace Travels.Application.Services
             if (reviewDto == null)
                 throw new ArgumentNullException(nameof(reviewDto));
 
+            var review = new Review
+            {
+                Comment = reviewDto.Comment,
+                Rating = reviewDto.Rating,
+                Date = DateTime.Now,
+                TravelOfferId = reviewDto.TravelOfferId,
+                IsEditable = false
+            };
+
             if (userId.HasValue)
             {
                 var user = await _userRepository.GetById(userId.Value);
-                if (user != null)
-                {
-                    reviewDto.UserName = user.Name;
-                }
-                else
-                {
+                if (user == null)
                     throw new ArgumentException("User not found");
-                }
+
+                review.UserId = userId.Value;
+                review.User = user;
+                review.NotLogginUser = null;
             }
             else
             {
-                reviewDto.UserName = "Anonim";
+                review.UserId = null;
+                review.User = null;
+                review.NotLogginUser = "Anonim";
             }
 
             var travelOffer = await _travelOfferRepository.GetTravel(reviewDto.TravelOfferId);
             if (travelOffer == null)
                 throw new ArgumentException("Travel offer not found");
 
-            var review = _mapper.Map<Review>(reviewDto);
             await _reviewRepository.AddReview(review);
         }
 
@@ -64,11 +72,21 @@ namespace Travels.Application.Services
             var review = await _reviewRepository.GetReview(reviewDto.Id);
             if (review == null)
                 throw new ArgumentException("Review not found");
-        }
 
-        public Task DeleteReview(ReviewDto reviewDto)
+            var ReviewDto = _mapper.Map<Review>(reviewDto);
+
+            await _reviewRepository.ChangeReview(ReviewDto);
+        }
+        public async Task DeleteReview(int id)
         {
-            throw new NotImplementedException();
+            if (id >= 0)
+                throw new ArgumentOutOfRangeException("Id not found");
+
+            var review = await _reviewRepository.GetReview(id);
+            if (review == null)
+                throw new ArgumentException("Review not found");
+
+            await _reviewRepository.DeleteReview(id);
         }
 
         public async Task<IEnumerable<ReviewDto>> GetReviews()

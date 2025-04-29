@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Travels.Domain.Entities
+﻿namespace Travels.Domain.Entities
 {
     public class MyModel
     {
