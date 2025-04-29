@@ -29,7 +29,7 @@ namespace Travels.API.Controllers
                     return NotFound("Brak obiektów turystycznych.");
                 }
 
-                return Ok(list);  // Zwrócenie listy obiektów
+                return Ok(list);
             }
             catch (Exception ex)
             {
@@ -37,7 +37,6 @@ namespace Travels.API.Controllers
             }
         }
 
-        // Endpoint do pobrania obiektu po ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetObjectById(int id)
         {
@@ -58,7 +57,6 @@ namespace Travels.API.Controllers
             }
         }
 
-        // Endpoint do filtrowania obiektów turystycznych
         [HttpGet("filter")]
         public async Task<IActionResult> GetFilteredObjects([FromQuery] string filter)
         {
@@ -76,7 +74,7 @@ namespace Travels.API.Controllers
                     return NotFound("Nie znaleziono obiektów spełniających podane kryterium.");
                 }
 
-                return Ok(filteredList);  // Zwrócenie przefiltrowanej listy
+                return Ok(filteredList); 
             }
             catch (Exception ex)
             {
