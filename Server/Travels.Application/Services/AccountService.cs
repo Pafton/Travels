@@ -46,7 +46,7 @@ namespace Travels.Application.Services
             user.Password = _passwordHasher.HashPassword(user, registerDto.Password);
             await _userRepository.AddUser(user);
 
-            var activationLink = $"http://localhost:5190/User/activate-account/{user.Id}";
+            var activationLink = $"http://localhost:5190/api/Account/set-activation/{user.Id}";
 
             await _emailSender.SendEmailAsync(user.Email, "Link activate", $"Click here to activate your account: {activationLink}");
 
@@ -127,13 +127,23 @@ namespace Travels.Application.Services
             await _userRepository.DeleteUser(id);
         }
 
-        public async Task SetActivationStatus(int id, bool isActive)
+        public async Task SetActivationStatus(int id)
         {
             var user = await _userRepository.GetUser(id);
             if (user == null)
                 throw new KeyNotFoundException("Użytkownik nie został znaleziony.");
 
-            user.isActivate = isActive;
+            user.isActivate = true;
+            await _userRepository.ChangeUser(user);
+        }
+
+        public async Task DeactivateAccount(int id)
+        {
+            var user = await _userRepository.GetUser(id);
+            if (user == null)
+                throw new KeyNotFoundException("Użytkownik nie został znaleziony.");
+
+            user.isActivate = false;
             await _userRepository.ChangeUser(user);
         }
 
@@ -145,5 +155,6 @@ namespace Travels.Application.Services
 
             return _mapper.Map<IEnumerable<UserListItemDto>>(users);
         }
+
     }
 }
