@@ -66,10 +66,10 @@ namespace Travels.Infrastructure.Presistance
         {
             var users = new List<User>()
             {
-                new User() { Name = "Jan", Surname = "Kowalski", Email = "jan.kowalski@test.com", Password = "jankowalski", Role = Role.Admin },
-                new User() { Name = "Anna", Surname = "Nowak", Email = "anna.nowak@test.com", Password = "annanowak", Role = Role.Customer },
-                new User() { Name = "Paweł", Surname = "Zieliński", Email = "pawel.zielinski@test.com", Password = "pawelzielinski", Role = Role.Customer },
-                new User() { Name = "Ewa", Surname = "Bąk", Email = "ewa.bak@test.com", Password = "ewabak", Role = Role.Customer }
+                new User() { Name = "Jan", Surname = "Kowalski", Email = "jan.kowalski@test.com", Password = "jankowalski", Role = Role.Admin,isActivate = true },
+                new User() { Name = "Anna", Surname = "Nowak", Email = "anna.nowak@test.com", Password = "annanowak", Role = Role.Customer, isActivate = true },
+                new User() { Name = "Paweł", Surname = "Zieliński", Email = "pawel.zielinski@test.com", Password = "pawelzielinski", Role = Role.Customer, isActivate = true },
+                new User() { Name = "Ewa", Surname = "Bąk", Email = "ewa.bak@test.com", Password = "ewabak", Role = Role.Customer, isActivate = false}
             };
             foreach (var user in users)
             {

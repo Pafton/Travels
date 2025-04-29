@@ -11,8 +11,8 @@ using Travels.Infrastructure.Presistance;
 namespace Travels.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250429105205_ChangedbtoSqlite")]
-    partial class ChangedbtoSqlite
+    [Migration("20250429124556_test1")]
+    partial class test1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

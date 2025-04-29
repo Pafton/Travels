@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Travels.Infrastructure\Travels.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="data\" />
+  </ItemGroup>
+
 </Project>

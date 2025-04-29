@@ -97,8 +97,9 @@ builder.Services.AddCors(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));*/
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlite("Data Source=./Travels.db")
-        );
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
 
 
 
@@ -121,6 +122,7 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IResetTokenService, ResetTokenService>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IReviewService,ReviewService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 //Password Hasher
@@ -148,6 +150,7 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
     var prepDatabase = new PrepDatabase(dbContext, passwordHasher);
+    dbContext.Database.Migrate();
     prepDatabase.Seed();
 }
 
