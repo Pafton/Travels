@@ -6,6 +6,5 @@ namespace Travels.Application.Interfaces
     {
         Task<string> SendPasswordResetLink(string email);
         Task ResetPassword(string token, string newPassword);
-        Task ActivateAccount(int id);
     }
 }

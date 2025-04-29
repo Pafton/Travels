@@ -16,7 +16,6 @@ namespace Travels.API.Controllers
             _modelLLMService = modelLLMService;
         }
 
-        // Endpoint do pobierania obiektów turystycznych
         [HttpGet("list")]
         public async Task<IActionResult> GetListFromLLM()
         {

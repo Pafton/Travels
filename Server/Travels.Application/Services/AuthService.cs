@@ -43,22 +43,6 @@ namespace Travels.Application.Services
             _passwordResetTokenRepository = passwordResetTokenRepository;
         }
 
-        public async Task ActivateAccount(int id)
-        {
-            if (id < 0)
-                throw new ArgumentOutOfRangeException(nameof(id), "Invalid user ID");
-
-            var user = await _userRepository.GetById(id);
-            if (user == null)
-                throw new ArgumentNullException("User not found");
-
-            if (user.isActivate)
-                throw new Exception("Account is already activated");
-
-
-            user.isActivate = true;
-            await _userRepository.ChangeUser(user);
-        }
 
         public async Task<string> SendPasswordResetLink(string email)
         {

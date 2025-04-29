@@ -131,7 +131,10 @@ namespace Travels.Application.Services
         {
             var user = await _userRepository.GetUser(id);
             if (user == null)
-                throw new KeyNotFoundException("Użytkownik nie został znaleziony.");
+                throw new KeyNotFoundException("User not found.");
+
+            if (user.isActivate == true)
+                throw new Exception("Account is already activated");
 
             user.isActivate = true;
             await _userRepository.ChangeUser(user);
@@ -141,7 +144,7 @@ namespace Travels.Application.Services
         {
             var user = await _userRepository.GetUser(id);
             if (user == null)
-                throw new KeyNotFoundException("Użytkownik nie został znaleziony.");
+                throw new KeyNotFoundException("User not found.");
 
             user.isActivate = false;
             await _userRepository.ChangeUser(user);

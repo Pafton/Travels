@@ -17,44 +17,6 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpGet("activate-account/{id}")]
-    [SwaggerOperation(Summary = "Aktywuje konto użytkownika", Description = "Aktywuje konto użytkownika na podstawie podanego identyfikatora.")]
-    [SwaggerResponse(200, "Konto zostało aktywowane.")]
-    [SwaggerResponse(400, "Nieprawidłowy identyfikator użytkownika.")]
-    [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
-    [SwaggerResponse(403, "Brak uprawnień do wykonania tej operacji.")]
-    public async Task<IActionResult> ActivateAccount([FromRoute] int id)
-    {
-        try
-        {
-            await _authService.ActivateAccount(id);
-            return Ok("Status aktywacji został zmieniony.");
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            Console.WriteLine($">[AuthCtrl] Invalid user ID: {ex.Message}");
-            return BadRequest("Nieprawidłowy identyfikator użytkownika.");
-        }
-        catch (ArgumentNullException ex)
-        {
-            Console.WriteLine($">[AuthCtrl] User not found: {ex.Message}");
-            return NotFound("Użytkownik nie został znaleziony.");
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            Console.WriteLine($">[AuthCtrl] Unauthorized user: {ex.Message}");
-            return StatusCode(403, "Brak uprawnień do wykonania tej operacji.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($">[AuthCtrl] Error while activating account: {ex.Message}");
-            return BadRequest($"Błąd podczas aktywacji konta: {ex.Message}");
-        }
-    }
-
-
-
     [HttpPost("send-password-reset-link")]
     [SwaggerOperation(Summary = "Wysyła na maila token potrzebny do zmiany hasla", Description = "Wysyła e-mail z linkiem do resetu hasła dla podanego adresu e-mail.")]
     [SwaggerResponse(200, "Link do resetu hasła został wysłany.")]
