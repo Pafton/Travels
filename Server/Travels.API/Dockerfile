@@ -15,11 +15,11 @@ COPY ["Server/Travels.Infrastructure/Travels.Infrastructure.csproj", "Server/Tra
 RUN dotnet restore "./Server/Travels.API/Travels.API.csproj"
 COPY . .
 WORKDIR "/src/Server/Travels.API"
-RUN dotnet build "./Travels.API.csproj" -c %BUILD_CONFIGURATION% -o /app/build
+RUN dotnet build "./Travels.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Travels.API.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Travels.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
