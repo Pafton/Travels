@@ -9,9 +9,25 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - sqlserver
     entrypoint: ["dotnet", "Travels.API.dll"]
     build:
       context: .
       dockerfile: Server/Travels.API/Dockerfile
     volumes:
       - ./Server/Travels.API/data:/data
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:
