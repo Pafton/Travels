@@ -11,6 +11,7 @@
         public int AvailableSpots { get; set; }
         public int DestinationId { get; set; }
         public virtual Destination Destination { get; set; } = default!;
+        public virtual ICollection<TravelOfferImage> TravelOfferImages { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; } = default!;
         public virtual ICollection<Hotel> Hotels { get; set; } = default!;
         public virtual ICollection<Transport> Transports { get; set; } = default!;

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Travels.Infrastructure.Presistance;
 
@@ -11,9 +12,11 @@ using Travels.Infrastructure.Presistance;
 namespace Travels.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250515105456_TesMigration")]
+    partial class TesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,28 +269,6 @@ namespace Travels.Infrastructure.Migrations
                     b.ToTable("TravelOffers");
                 });
 
-            modelBuilder.Entity("Travels.Domain.Entities.TravelOfferImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TravelOfferId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TravelOfferId");
-
-                    b.ToTable("TravelOfferImages");
-                });
-
             modelBuilder.Entity("Travels.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -412,17 +393,6 @@ namespace Travels.Infrastructure.Migrations
                     b.Navigation("Destination");
                 });
 
-            modelBuilder.Entity("Travels.Domain.Entities.TravelOfferImage", b =>
-                {
-                    b.HasOne("Travels.Domain.Entities.TravelOffer", "TravelOffer")
-                        .WithMany("TravelOfferImages")
-                        .HasForeignKey("TravelOfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TravelOffer");
-                });
-
             modelBuilder.Entity("Travels.Domain.Entities.Destination", b =>
                 {
                     b.Navigation("TravelOffers");
@@ -433,8 +403,6 @@ namespace Travels.Infrastructure.Migrations
                     b.Navigation("Reservations");
 
                     b.Navigation("Reviews");
-
-                    b.Navigation("TravelOfferImages");
                 });
 
             modelBuilder.Entity("Travels.Domain.Entities.User", b =>
