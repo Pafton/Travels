@@ -90,7 +90,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("set-activation/{id}")]
-    [SwaggerOperation(Summary = "Zmienia status aktywacji użytkownika -- User/Admin", Description = "User może aktywować  konto użytkownika za pomocą linku z maila.")]
+    [SwaggerOperation(Summary = "Zmienia status aktywacji użytkownika -- User/Admin", Description = "Użytkownik może aktywować konto za pomocą linku z maila.")]
     [SwaggerResponse(200, "Status aktywacji został zmieniony.")]
     [SwaggerResponse(400, "Nieprawidłowe dane.")]
     [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
