@@ -1,1 +1,24 @@
-<p>home works!</p>
+<app-navbar></app-navbar>
+
+<div class="container mt-4">
+  <div
+    *ngFor="let offer of travelOffers"
+    class="travel-offer-card"
+    style="margin-bottom: 20px"
+  >
+    <a routerLink="/travelOffers/{{ offer.id }}">
+      <img
+        *ngIf="offer.travelOfferImages && offer.travelOfferImages.length > 0"
+        [src]="getImageSrc(offer.travelOfferImages[0].imageData)"
+        alt="{{ offer.title }}"
+        style="
+          max-width: 500px;
+          height: auto;
+          display: block;
+          margin-bottom: 8px;
+        "
+      />
+      <h3>{{ offer.title }}</h3>
+    </a>
+  </div>
+</div>

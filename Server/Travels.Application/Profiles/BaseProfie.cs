@@ -32,6 +32,10 @@ namespace Travels.Application.Profiles
                 .ForMember(dest => dest.NotLogginUser, opt => opt.Ignore());
 
             CreateMap<User, UserListItemDto>();
+
+            CreateMap<TravelOfferImageDto, TravelOfferImage>();
+            CreateMap<TravelOfferImage, TravelOfferImageDto>();
+
         }
     }
 }
