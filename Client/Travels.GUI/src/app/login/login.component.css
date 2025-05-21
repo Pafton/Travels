@@ -1,0 +1,36 @@
+div{
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input{
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+button{
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: backgroud-color 0.3s ease;
+}
+
+button:hover{
+    background-color: coral;
+}

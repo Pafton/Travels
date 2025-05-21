@@ -13,6 +13,7 @@ namespace Travels.Infrastructure.Presistance
         public DbSet<TravelOffer> TravelOffers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+        public DbSet<TravelOfferImage> TravelOfferImages { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -79,6 +80,13 @@ namespace Travels.Infrastructure.Presistance
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);
+
+            // Realcja między TraveOffer a TravelOfferImage (N:1)
+            modelBuilder.Entity<TravelOffer>()
+                .HasMany(toi => toi.TravelOfferImages)
+                .WithOne(t => t.TravelOffer)
+                .HasForeignKey(toi => toi.TravelOfferId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
