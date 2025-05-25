@@ -1,4 +1,6 @@
-/* Styl dla navbaru (możesz wykorzystać CSS z poprzedniej wiadomości) */
+.navbar{
+  margin: 10px;
+}
 
 nav.navbar {
   background-color: #007BFF;
@@ -7,8 +9,8 @@ nav.navbar {
   gap: 20px;
   align-items: center;
   font-family: Arial, sans-serif;
-  flex-wrap: wrap; /* ważne, żeby elementy zawijały się na mniejszych ekranach */
-  justify-content: center; /* wycentrowanie na małych ekranach */
+  flex-wrap: wrap;
+  justify-content: center; 
 }
 
 nav.navbar a {

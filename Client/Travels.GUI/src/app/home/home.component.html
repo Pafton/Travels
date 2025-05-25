@@ -1,23 +1,14 @@
 <app-navbar></app-navbar>
 
 <div class="container mt-4">
-  <div
-    *ngFor="let offer of travelOffers"
-    class="travel-offer-card"
-    style="margin-bottom: 20px"
-  >
+  <div *ngFor="let offer of travelOffers; let i = index" class="travel-offer-card" style="margin-bottom: 20px;">
     <a routerLink="/travelOffers/{{ offer.id }}">
-      <img
-        *ngIf="offer.travelOfferImages && offer.travelOfferImages.length > 0"
-        [src]="getImageSrc(offer.travelOfferImages[0].imageData)"
-        alt="{{ offer.title }}"
-        style="
-          max-width: 500px;
-          height: auto;
-          display: block;
-          margin-bottom: 8px;
-        "
-      />
+      <swiper-container [attr.id]="'swiper-container-' + i"
+        style="width: 500px; height: auto; display: block; margin-bottom: 8px;">
+        <swiper-slide *ngFor="let img of offer.travelOfferImages">
+          <img [src]="getImageSrc(img.imageData)" [alt]="offer.title" style="width: 100%; height: auto;" />
+        </swiper-slide>
+      </swiper-container>
       <h3>{{ offer.title }}</h3>
     </a>
   </div>
