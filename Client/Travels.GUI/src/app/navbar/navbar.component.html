@@ -1,6 +1,16 @@
-<nav class="navbar">
-  <a routerLink="/home"> Strona główna </a>
-  <a routerLink="/offers">Oferty</a>
-  <a routerLink="/reservations">Moje rezerwacje</a>
-  <a routerLink="/account">Moje dane</a>
+<nav>
+  <ul class="nav-left">
+    <li><a routerLink="/home">Strona główna</a></li>
+    <li><a (click)="checkAccess('/my-reservations')" href="javascript:void(0)">Moje rezerwacje</a></li>
+    <li><a (click)="checkAccess('/my-profile')" href="javascript:void(0)">Moje dane</a></li>
+  </ul>
+
+  <ul class="nav-right">
+    <li *ngIf="!isLoggedIn">
+      <a routerLink="/login" class="btn-login">Zaloguj się</a>
+    </li>
+    <li *ngIf="isLoggedIn">
+      <button (click)="logout()" class="btn-logout" href="javascript:void(0)">Wyloguj się</button>
+    </li>
+  </ul>
 </nav>

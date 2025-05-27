@@ -10,14 +10,14 @@ export class HomeService {
 
   private readonly apiUrl = 'http://localhost:5190/api/TravelOffer'
 
-  constructor(private readonly http:HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
 
-    getTravelOfferById(id: number): Observable<TravelOffer> {
-      return this.http.get<TravelOffer>(`${this.apiUrl}/${id}`);
+  getTravelOfferById(id: number): Observable<TravelOffer> {
+    return this.http.get<TravelOffer>(`${this.apiUrl}/GetTravel/${id}`);
   }
 
-  getTravelAllOffers(): Observable<TravelOffer[]>{
-     return this.http.get<TravelOffer[]>(`${this.apiUrl}/GetAllTravels`);
+  getTravelAllOffers(): Observable<TravelOffer[]> {
+    return this.http.get<TravelOffer[]>(`${this.apiUrl}/GetAllTravels`);
   }
 }

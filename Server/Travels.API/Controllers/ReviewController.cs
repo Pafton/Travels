@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using Travels.Application.Dtos.Reservation;
@@ -78,6 +79,60 @@ namespace Travels.API.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($">[ReviewCtl] Unhandled exception: {ex.Message}");
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Edytuje recenzję", Description = "Umożliwia edycję istniejącej recenzji. Dostępne tylko dla administratora.")]
+        [SwaggerResponse(200, "Recenzja została zaktualizowana.")]
+        [SwaggerResponse(400, "Nieprawidłowe dane wejściowe.")]
+        [SwaggerResponse(404, "Nie znaleziono recenzji.")]
+        public async Task<IActionResult> ChangeReview([FromBody] ReviewDto reviewDto)
+        {
+            try
+            {
+                await _reviewservice.ChangeReview(reviewDto);
+                return Ok(new { message = "Review updated successfully" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest($"Invalid data: {ex.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Usuwa recenzję", Description = "Umożliwia usunięcie recenzji. Dostępne tylko dla administratora.")]
+        [SwaggerResponse(200, "Recenzja została usunięta.")]
+        [SwaggerResponse(404, "Nie znaleziono recenzji.")]
+        [SwaggerResponse(500, "Wystąpił błąd serwera.")]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            try
+            {
+                await _reviewservice.DeleteReview(id);
+                return Ok(new { message = "Review deleted successfully" });
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
                 return BadRequest($"Unexpected error: {ex.Message}");
             }
         }

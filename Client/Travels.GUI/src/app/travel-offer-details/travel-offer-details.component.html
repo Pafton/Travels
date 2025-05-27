@@ -1,0 +1,15 @@
+<div *ngIf="offer" class="offer-details-container">
+  <h2>{{ offer.title }}</h2>
+  <p>{{ offer.description }}</p>
+
+  <div class="offer-info">
+    <p><strong>Cena:</strong> {{ offer.price }} PLN</p>
+    <p><strong>Dostępne miejsca:</strong> {{ offer.availableSpots }}</p>
+    <p><strong>Termin:</strong> {{ offer.begin | date:'shortDate' }} - {{ offer.end | date:'shortDate' }}</p>
+    <p><strong>Miejsce docelowe:</strong> {{ offer.title }}</p>
+  </div>
+  
+  <h3>Recenzje</h3>
+  <app-review [travelOfferId]="offer.id"></app-review>
+
+</div>
