@@ -3,6 +3,7 @@ using Travels.Application.Dtos.Account;
 using Travels.Application.Dtos.Reservation;
 using Travels.Application.Dtos.Review;
 using Travels.Application.Dtos.Travel;
+using Travels.Application.Dtos.User;
 using Travels.Application.Services;
 using Travels.Domain.Entities;
 
@@ -18,6 +19,10 @@ namespace Travels.Application.Profiles
             CreateMap<User, RegisterDto>();
             CreateMap<RegisterDto, User>()
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
+
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+
 
             CreateMap<TravelOffer, TravelOfferDto>();
             CreateMap<TravelOfferDto, TravelOffer>();
