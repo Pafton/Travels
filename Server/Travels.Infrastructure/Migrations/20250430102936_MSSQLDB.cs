@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Travels.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstInitialize : Migration
+    public partial class MSSQLDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,7 +66,8 @@ namespace Travels.Infrastructure.Migrations
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false)
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    isActivate = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,6 +100,53 @@ namespace Travels.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PasswordResetTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PasswordResetTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PasswordResetTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HotelTravelOffer",
+                columns: table => new
+                {
+                    HotelsId = table.Column<int>(type: "int", nullable: false),
+                    TravelOffersId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HotelTravelOffer", x => new { x.HotelsId, x.TravelOffersId });
+                    table.ForeignKey(
+                        name: "FK_HotelTravelOffer_Hotels_HotelsId",
+                        column: x => x.HotelsId,
+                        principalTable: "Hotels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HotelTravelOffer_TravelOffers_TravelOffersId",
+                        column: x => x.TravelOffersId,
+                        principalTable: "TravelOffers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reservations",
                 columns: table => new
                 {
@@ -107,8 +155,7 @@ namespace Travels.Infrastructure.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     TravelOfferId = table.Column<int>(type: "int", nullable: false),
                     ReservationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,10 +183,10 @@ namespace Travels.Infrastructure.Migrations
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdentifier = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NotLogginUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
                     TravelOfferId = table.Column<int>(type: "int", nullable: false),
-                    IsEditable = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    IsEditable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -154,35 +201,12 @@ namespace Travels.Infrastructure.Migrations
                         name: "FK_Reviews_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TravelOfferHotel",
-                columns: table => new
-                {
-                    HotelsId = table.Column<int>(type: "int", nullable: false),
-                    TravelOffersId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TravelOfferHotel", x => new { x.HotelsId, x.TravelOffersId });
-                    table.ForeignKey(
-                        name: "FK_TravelOfferHotel_Hotels_HotelsId",
-                        column: x => x.HotelsId,
-                        principalTable: "Hotels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TravelOfferHotel_TravelOffers_TravelOffersId",
-                        column: x => x.TravelOffersId,
-                        principalTable: "TravelOffers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TravelOfferTransport",
+                name: "TransportTravelOffer",
                 columns: table => new
                 {
                     TransportsId = table.Column<int>(type: "int", nullable: false),
@@ -190,20 +214,30 @@ namespace Travels.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TravelOfferTransport", x => new { x.TransportsId, x.TravelOffersId });
+                    table.PrimaryKey("PK_TransportTravelOffer", x => new { x.TransportsId, x.TravelOffersId });
                     table.ForeignKey(
-                        name: "FK_TravelOfferTransport_Transports_TransportsId",
+                        name: "FK_TransportTravelOffer_Transports_TransportsId",
                         column: x => x.TransportsId,
                         principalTable: "Transports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TravelOfferTransport_TravelOffers_TravelOffersId",
+                        name: "FK_TransportTravelOffer_TravelOffers_TravelOffersId",
                         column: x => x.TravelOffersId,
                         principalTable: "TravelOffers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HotelTravelOffer_TravelOffersId",
+                table: "HotelTravelOffer",
+                column: "TravelOffersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PasswordResetTokens_UserId",
+                table: "PasswordResetTokens",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_TravelOfferId",
@@ -226,24 +260,25 @@ namespace Travels.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TravelOfferHotel_TravelOffersId",
-                table: "TravelOfferHotel",
+                name: "IX_TransportTravelOffer_TravelOffersId",
+                table: "TransportTravelOffer",
                 column: "TravelOffersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TravelOffers_DestinationId",
                 table: "TravelOffers",
                 column: "DestinationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TravelOfferTransport_TravelOffersId",
-                table: "TravelOfferTransport",
-                column: "TravelOffersId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "HotelTravelOffer");
+
+            migrationBuilder.DropTable(
+                name: "PasswordResetTokens");
+
             migrationBuilder.DropTable(
                 name: "Reservations");
 
@@ -251,16 +286,13 @@ namespace Travels.Infrastructure.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "TravelOfferHotel");
-
-            migrationBuilder.DropTable(
-                name: "TravelOfferTransport");
-
-            migrationBuilder.DropTable(
-                name: "Users");
+                name: "TransportTravelOffer");
 
             migrationBuilder.DropTable(
                 name: "Hotels");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Transports");

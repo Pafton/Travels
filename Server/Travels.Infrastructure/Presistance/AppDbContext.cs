@@ -1,12 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Travels.Domain.Entities;
 
 namespace Travels.Infrastructure.Presistance
@@ -20,6 +12,8 @@ namespace Travels.Infrastructure.Presistance
         public DbSet<Transport> Transports { get; set; }
         public DbSet<TravelOffer> TravelOffers { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+        public DbSet<TravelOfferImage> TravelOfferImages { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -45,14 +39,12 @@ namespace Travels.Infrastructure.Presistance
             // Relacja między TravelOffer a Hotel (M:N)
             modelBuilder.Entity<TravelOffer>()
                 .HasMany(to => to.Hotels)
-                .WithMany(h => h.TravelOffers)
-                .UsingEntity(j => j.ToTable("TravelOfferHotel"));
+                .WithMany(h => h.TravelOffers);
 
             // Relacja między TravelOffer a Transport (M:N)
             modelBuilder.Entity<TravelOffer>()
                 .HasMany(to => to.Transports)
-                .WithMany(t => t.TravelOffers)
-                .UsingEntity(j => j.ToTable("TravelOfferTransport"));
+                .WithMany(t => t.TravelOffers);
 
             // Relacja między Reservation a User (N:1)
             modelBuilder.Entity<Reservation>()
@@ -74,13 +66,27 @@ namespace Travels.Infrastructure.Presistance
                 .WithMany(to => to.Reviews)
                 .HasForeignKey(r => r.TravelOfferId)
                 .OnDelete(DeleteBehavior.Cascade);
-/*
+
+            modelBuilder.Entity<PasswordResetToken>()
+               .HasOne(prt => prt.User)
+               .WithMany(u => u.PasswordResetTokens)
+               .HasForeignKey(prt => prt.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
+            
             // Relacja między User a Review (N:1)
             modelBuilder.Entity<Review>()
                 .HasOne(u => u.User)
                 .WithMany(r => r.Reviews)
-                .HasForeignKey(r => r.UserIdentifier)
-                .OnDelete(DeleteBehavior.Restrict);*/
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+
+            // Realcja między TraveOffer a TravelOfferImage (N:1)
+            modelBuilder.Entity<TravelOffer>()
+                .HasMany(toi => toi.TravelOfferImages)
+                .WithOne(t => t.TravelOffer)
+                .HasForeignKey(toi => toi.TravelOfferId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

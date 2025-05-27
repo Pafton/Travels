@@ -17,7 +17,7 @@ namespace Travels.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -37,7 +37,7 @@ namespace Travels.Infrastructure.Migrations
 
                     b.HasIndex("TravelOffersId");
 
-                    b.ToTable("TravelOfferHotel", (string)null);
+                    b.ToTable("HotelTravelOffer");
                 });
 
             modelBuilder.Entity("TransportTravelOffer", b =>
@@ -52,7 +52,7 @@ namespace Travels.Infrastructure.Migrations
 
                     b.HasIndex("TravelOffersId");
 
-                    b.ToTable("TravelOfferTransport", (string)null);
+                    b.ToTable("TransportTravelOffer");
                 });
 
             modelBuilder.Entity("Travels.Domain.Entities.Destination", b =>
@@ -108,6 +108,37 @@ namespace Travels.Infrastructure.Migrations
                     b.ToTable("Hotels");
                 });
 
+            modelBuilder.Entity("Travels.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordResetTokens");
+                });
+
             modelBuilder.Entity("Travels.Domain.Entities.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -119,12 +150,8 @@ namespace Travels.Infrastructure.Migrations
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TravelOfferId")
                         .HasColumnType("int");
@@ -159,6 +186,9 @@ namespace Travels.Infrastructure.Migrations
                     b.Property<bool>("IsEditable")
                         .HasColumnType("bit");
 
+                    b.Property<string>("NotLogginUser")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
@@ -167,10 +197,6 @@ namespace Travels.Infrastructure.Migrations
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserIdentifier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -240,6 +266,28 @@ namespace Travels.Infrastructure.Migrations
                     b.ToTable("TravelOffers");
                 });
 
+            modelBuilder.Entity("Travels.Domain.Entities.TravelOfferImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("TravelOfferId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TravelOfferId");
+
+                    b.ToTable("TravelOfferImages");
+                });
+
             modelBuilder.Entity("Travels.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -266,6 +314,9 @@ namespace Travels.Infrastructure.Migrations
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isActivate")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -302,6 +353,17 @@ namespace Travels.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Travels.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.HasOne("Travels.Domain.Entities.User", "User")
+                        .WithMany("PasswordResetTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Travels.Domain.Entities.Reservation", b =>
                 {
                     b.HasOne("Travels.Domain.Entities.TravelOffer", "TravelOffer")
@@ -329,11 +391,14 @@ namespace Travels.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Travels.Domain.Entities.User", null)
+                    b.HasOne("Travels.Domain.Entities.User", "User")
                         .WithMany("Reviews")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("TravelOffer");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Travels.Domain.Entities.TravelOffer", b =>
@@ -347,6 +412,17 @@ namespace Travels.Infrastructure.Migrations
                     b.Navigation("Destination");
                 });
 
+            modelBuilder.Entity("Travels.Domain.Entities.TravelOfferImage", b =>
+                {
+                    b.HasOne("Travels.Domain.Entities.TravelOffer", "TravelOffer")
+                        .WithMany("TravelOfferImages")
+                        .HasForeignKey("TravelOfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TravelOffer");
+                });
+
             modelBuilder.Entity("Travels.Domain.Entities.Destination", b =>
                 {
                     b.Navigation("TravelOffers");
@@ -357,10 +433,14 @@ namespace Travels.Infrastructure.Migrations
                     b.Navigation("Reservations");
 
                     b.Navigation("Reviews");
+
+                    b.Navigation("TravelOfferImages");
                 });
 
             modelBuilder.Entity("Travels.Domain.Entities.User", b =>
                 {
+                    b.Navigation("PasswordResetTokens");
+
                     b.Navigation("Reservations");
 
                     b.Navigation("Reviews");

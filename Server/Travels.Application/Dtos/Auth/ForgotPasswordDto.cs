@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Travels.Domain.Interfaces
+namespace Travels.Application.Dtos.Auth
 {
-    internal interface IDestination
+    public class ForgotPasswordDto
     {
+        public string Email { get; set; } = string.Empty;
     }
 }

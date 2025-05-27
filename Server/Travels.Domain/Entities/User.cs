@@ -1,10 +1,4 @@
-﻿    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
-    namespace Travels.Domain.Entities
+﻿    namespace Travels.Domain.Entities
     {
         public class User
         {
@@ -16,5 +10,7 @@
             public Role Role { get; set; }
             public virtual ICollection<Review> Reviews { get; set; } = default!;
             public virtual ICollection<Reservation> Reservations { get; set; } = default!;
+            public virtual ICollection<PasswordResetToken> PasswordResetTokens { get; set; } = default!;
+            public bool isActivate { get; set; } = false;
         }
     }
