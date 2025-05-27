@@ -77,6 +77,7 @@ namespace Travels.Application.Services
 
             await _reviewRepository.ChangeReview(ReviewDto);
         }
+
         public async Task DeleteReview(int id)
         {
             if (id >= 0)

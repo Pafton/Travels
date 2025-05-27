@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Travels.Domain.Entities;
 
 namespace Travels.Application.Dtos.Travel
 {
@@ -16,5 +17,6 @@ namespace Travels.Application.Dtos.Travel
         public DateOnly End { get; set; }
         public int AvailableSpots { get; set; }
         public int DestinationId { get; set; }
+        public ICollection<TravelOfferImageDto> TravelOfferImages { get; set; } = default!;
     }
 }

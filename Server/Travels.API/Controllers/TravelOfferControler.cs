@@ -60,7 +60,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpPost("CreateTravel")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Tworzy nową ofertę podróży -- ADMIN", Description = "Tworzy nową ofertę podróży na podstawie przekazanych danych.")]
         [SwaggerResponse(201, "Oferta podróży została pomyślnie utworzona.")]
         [SwaggerResponse(400, "Nieprawidłowe dane oferty podróży.")]
@@ -79,7 +79,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpDelete("DeleteTravel/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Usuwa ofertę podróży o podanym ID -- ADMIN", Description = "Usuwa ofertę podróży na podstawie identyfikatora.")]
         [SwaggerResponse(200, "Oferta podróży została pomyślnie usunięta.")]
         [SwaggerResponse(400, "Nieprawidłowe ID oferty podróży.")]
@@ -102,10 +102,10 @@ namespace Travels.API.Controllers
         }
 
         [HttpPut("UpdateTravel/{id}")]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Aktualizuje ofertę podróży o podanym ID -- ADMIN", Description = "Aktualizuje ofertę podróży na podstawie przekazanych danych.")]
         [SwaggerResponse(200, "Oferta podróży została pomyślnie zaktualizowana.")]
-        [SwaggerResponse(400, "Nieprawidłowe dane oferty podróży.")]
+        [SwaggerResponse(400, "Nieprawidło  we dane oferty podróży.")]
         public async Task<IActionResult> UpdateTravel([FromBody] TravelOfferDto travelOfferDto, int id)
         {
             try
@@ -114,6 +114,31 @@ namespace Travels.API.Controllers
                 return Ok(new { message = $"Travel offer with id {id} updated" });
             }
             catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("AddImage")]
+        [Consumes("multipart/form-data")]
+        [SwaggerOperation(Summary = "Dodaje zdjęcie do istniejącej oferty podróży -- ADMIN")]
+        public async Task<IActionResult> AddImage([FromForm] TravelOfferImageUploadDto dto)
+        {
+            try
+            {
+                using var memoryStream = new MemoryStream();
+                await dto.ImageFile.CopyToAsync(memoryStream);
+
+                var imageDto = new TravelOfferImageDto
+                {
+                    TravelOfferId = dto.TravelOfferId,
+                    ImageData = memoryStream.ToArray()
+                };
+
+                await _travelOfferService.AddImageToTravelOffer(imageDto);
+                return Ok(new { message = $"Zdjęcie dodane do oferty o ID {dto.TravelOfferId}" });
+            }
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }

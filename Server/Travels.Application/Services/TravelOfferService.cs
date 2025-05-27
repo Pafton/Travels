@@ -22,6 +22,24 @@ namespace Travels.Application.Services
             _destinationRepository = destinationRepository;
             _mapper = mapper;
         }
+
+        public async Task AddImageToTravelOffer(TravelOfferImageDto imageDto)
+        {
+            if (imageDto == null)
+                throw new ArgumentNullException(nameof(imageDto));
+
+            var travelOffer = await _travelOfferRepository.GetTravel(imageDto.TravelOfferId);
+            if (travelOffer == null)
+                throw new ArgumentNullException("Travel offer not found");
+
+            var imageEntity = _mapper.Map<TravelOfferImage>(imageDto);
+            imageEntity.TravelOfferId = imageDto.TravelOfferId;
+
+            travelOffer.TravelOfferImages.Add(imageEntity);
+
+            await _travelOfferRepository.ChangeTravelOffer(travelOffer);
+        }
+
         public async Task<TravelOfferDto?> GetTravel(int id)
         {
             if (id < 0)

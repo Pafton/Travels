@@ -139,6 +139,7 @@ namespace Travels.Infrastructure.Presistance
                     DestinationId = destinationNY.Id,
                     Hotels = new List<Hotel> { hotelNY },
                     Transports = new List<Transport> { transportBus }
+
                 },
                 new TravelOffer()
                 {
