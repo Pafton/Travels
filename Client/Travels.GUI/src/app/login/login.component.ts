@@ -1,34 +1,32 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-import { environment } from '../../environments/environment';
-
+import { AccountService } from '../Services/account.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   email = '';
   password = '';
 
   constructor(
-    private http: HttpClient,
+    private accountService: AccountService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   onSubmit() {
     const loginData = { email: this.email, password: this.password };
 
-    this.http.post(`${environment.apiUrl}/api/Account/login`, loginData, {
-      responseType: 'text'
-    }).subscribe({
+    this.accountService.login(loginData).subscribe({
       next: (token: string) => {
         this.authService.setToken(token);
         this.router.navigate(['/home']);
@@ -38,5 +36,6 @@ export class LoginComponent {
         alert('Niepoprawny login lub hasło');
       }
     });
+
   }
 }

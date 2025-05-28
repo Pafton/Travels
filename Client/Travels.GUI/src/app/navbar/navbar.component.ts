@@ -33,4 +33,8 @@ export class NavbarComponent implements OnInit {
     }
     this.router.navigate([route]);
   }
+
+   register() {
+    this.router.navigate(['/register']);
+  }
 }
