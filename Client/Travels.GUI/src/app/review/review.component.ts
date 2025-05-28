@@ -28,7 +28,6 @@ export class ReviewComponent implements OnInit {
   loadReviews(): void {
     this.reviewService.getReviews().subscribe((allReviews) => {
       this.reviews = allReviews.filter(r => r.travelOfferId === this.travelOfferId);
-            console.log(this.reviews)
     });
   }
 }
