@@ -1,5 +1,5 @@
 <div class="review-form">
-  <h3>{{ isEdit ? 'Edytuj recenzję' : 'Dodaj recenzję' }}</h3>
+  <h3>{{ isEdit ? "Edytuj recenzję" : "Dodaj recenzję" }}</h3>
 
   <label>
     Ocena:
@@ -11,6 +11,8 @@
     <textarea [(ngModel)]="review.comment"></textarea>
   </label>
 
-  <button (click)="submit()">{{ isEdit ? 'Zapisz zmiany' : 'Dodaj recenzję' }}</button>
+  <button (click)="submit()">
+    {{ isEdit ? "Zapisz zmiany" : "Dodaj recenzję" }}
+  </button>
   <button (click)="cancel()">Anuluj</button>
 </div>

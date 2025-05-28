@@ -60,10 +60,17 @@ namespace Travels.Application.Services
                 throw new Exception("Offer not found");
 
             var reservation = _mapper.Map<Reservation>(reservationDto);
-
-            reservation.TravelOffer.AvailableSpots--;
-
             await _reservationRepository.AddReservation(reservation);
+
+
+            var traveloffer = await _travelOfferRepository.GetTravel(reservationDto.TravelOfferId);
+            if (traveloffer == null)
+                throw new KeyNotFoundException(nameof(traveloffer));
+
+            traveloffer.AvailableSpots--;
+            await _travelOfferRepository.ChangeTravelOffer(traveloffer);
+
+
         }
 
         public async Task UpdateReservation(ReservationDto reservationDto, int id)

@@ -47,8 +47,6 @@ export class ReviewFormComponent {
     });
   }
 
-
-
   cancel(): void {
     this.closeForm.emit();
   }
