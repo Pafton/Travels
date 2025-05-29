@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
         try
         {
             await _authService.ResetPassword(resetPasswordDto.Token, resetPasswordDto.NewPassword);
-            return Ok("Hasło zostało pomyślnie zresetowane.");
+            return Ok(new { message = "Hasło zostało pomyślnie zresetowane." });
         }
         catch (Exception ex)
         {

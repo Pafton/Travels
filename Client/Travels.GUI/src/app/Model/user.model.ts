@@ -7,6 +7,7 @@ export interface User {
   surname: string;
   email: string;
   password: string;
+  isActivate?: boolean;
   reviews?: Review[]; 
   reservations?: Reservation[];
 }

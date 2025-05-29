@@ -16,6 +16,11 @@ import { HttpClientModule } from '@angular/common/http';
 export class LoginComponent {
   email = '';
   password = '';
+  forgotEmail = '';
+  resetToken = '';
+  newPassword = '';
+  resetMode = false;
+
 
   constructor(
     private accountService: AccountService,
@@ -33,9 +38,13 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('Błąd logowania:', err);
-        alert('Niepoprawny login lub hasło');
+        alert('Niepoprawny login/hasło lub nieaktywne konto');
       }
     });
 
+  }
+
+  goToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
   }
 }

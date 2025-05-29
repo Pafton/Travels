@@ -21,7 +21,7 @@ export class RegisterComponent {
   constructor(
     private accountService: AccountService,
     private router: Router
-  ) {}
+  ) { }
 
   register(event: Event) {
     event.preventDefault();
@@ -42,11 +42,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         console.error('Błąd rejestracji:', err);
-        if (err.error) {
-          alert('Błąd: ' + JSON.stringify(err.error));
-        } else {
-          alert('Coś poszło nie tak podczas rejestracji.');
-        }
+        alert(err.text || 'Coś poszło nie tak podczas rejestracji.');
       }
     });
   }

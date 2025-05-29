@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class AccountService {
   private apiUrl = 'http://localhost:5190/api/Account';
+  private authUrl = 'http://localhost:5190/api/Auth'
 
   constructor(private http: HttpClient) { }
 
@@ -15,7 +16,16 @@ export class AccountService {
     return this.http.post('http://localhost:5190/api/Account/login', credentials, { responseType: 'text' });
   }
 
-  register(registerDto: { email: string; password: string; }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, registerDto);
+  register(registerDto: { name: string; surname: string; email: string; password: string; }): Observable<string> {
+    return this.http.post(`${this.apiUrl}/register`, registerDto, { responseType: 'text' });
   }
+
+  sendPasswordResetLink(email: string): Observable<string> {
+    return this.http.post(`${this.authUrl}/send-password-reset-link`,JSON.stringify(email), { responseType: 'text', headers: { 'Content-Type': 'application/json' } });
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    return this.http.post(`${this.authUrl}/reset-password`, { token, newPassword }, { responseType: 'text' });
+  }
+  
 }
