@@ -6,40 +6,41 @@
       *ngFor="let offer of travelOffers; let i = index"
       class="travel-offer-card"
     >
-      <a routerLink="/travelOffers/{{ offer.id }}">
-        <div class="gallery-container">
-          <ng-container
-            *ngIf="
-              offer.travelOfferImages && offer.travelOfferImages.length > 0;
-              else noImages
+      <div class="gallery-container">
+        <ng-container
+          *ngIf="
+            offer.travelOfferImages && offer.travelOfferImages.length > 0;
+            else noImages
+          "
+        >
+          <img
+            [src]="
+              getImageSrc(
+                offer.travelOfferImages[currentImageIndex[i]].imageData
+              )
             "
+            [alt]="offer.title"
+            class="gallery-image"
+          />
+          <button class="nav-button left" (click)="prevImage(i)">
+            &#8249;
+          </button>
+          <button
+            class="nav-button right"
+            (click)="nextImage(i, offer.travelOfferImages.length)"
           >
-            <img
-              [src]="
-                getImageSrc(
-                  offer.travelOfferImages[currentImageIndex[i]].imageData
-                )
-              "
-              [alt]="offer.title"
-              class="gallery-image"
-            />
-            <button class="nav-button left" (click)="prevImage(i)">
-              &#8249;
-            </button>
-            <button
-              class="nav-button right"
-              (click)="nextImage(i, offer.travelOfferImages.length)"
-            >
-              &#8250;
-            </button>
-          </ng-container>
-          <ng-template #noImages>
-            <div class="no-images-message">Brak zdjęć dla tej oferty</div>
-          </ng-template>
-        </div>
-        <h3>{{ offer.title }}</h3>
-        <h3>{{ offer.price }} PLN</h3>
-      </a>
+            &#8250;
+          </button>
+        </ng-container>
+        <ng-template #noImages>
+          <div class="no-images-message">Brak zdjęć dla tej oferty</div>
+        </ng-template>
+      </div>
+      <h3 [routerLink]="['/travelOffers', offer.id]">
+        {{ offer.title }}
+      </h3>
+      <h3>{{ offer.price }} PLN</h3>
+      <!-- <a routerLink="/travelOffers/{{ offer.id }}"></a> -->
     </div>
     <div
       *ngFor="let offer of travelOffers; let i = index"
