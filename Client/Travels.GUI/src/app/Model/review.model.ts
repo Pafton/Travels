@@ -1,8 +1,10 @@
 export interface Review {
-  id: number;
+  id?: number;
   comment: string;
   rating: number;
-  date: string;
+  date?: string;
+  userId?: number | null;
+  notLogginUser?: string | null;
   userName?: string;
   travelOfferId: number;
 }

@@ -8,6 +8,7 @@
   <ul class="nav-right">
     <li *ngIf="!isLoggedIn">
       <a routerLink="/login" class="btn-login">Zaloguj się</a>
+      <button (click)="register()" class="btn-logout" href="javascript:void(0)">Zarejestruj</button>
     </li>
     <li *ngIf="isLoggedIn">
       <button (click)="logout()" class="btn-logout" href="javascript:void(0)">Wyloguj się</button>

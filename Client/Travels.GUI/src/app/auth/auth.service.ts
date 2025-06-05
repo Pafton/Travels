@@ -27,4 +27,18 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  getUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const idClaim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+      return payload[idClaim] ? Number(payload[idClaim]) : null;
+    } catch (error) {
+      console.error('Błąd podczas dekodowania tokena:', error);
+      return null;
+    }
+  }
 }

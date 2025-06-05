@@ -21,6 +21,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Customer")]
         [SwaggerOperation(Summary = "Dodaje recenzję do oferty wycieczki", Description = "Umożliwia dodanie recenzji dla wybranej oferty wycieczki. Recenzja zawiera komentarz, ocenę oraz identyfikator użytkownika.")]
         [SwaggerResponse(200, "Recenzja została pomyślnie dodana.")]
         [SwaggerResponse(400, "Nieprawidłowe dane wejściowe lub brak wymaganych pól w żądaniu.")]
@@ -84,7 +85,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Edytuje recenzję", Description = "Umożliwia edycję istniejącej recenzji. Dostępne tylko dla administratora.")]
         [SwaggerResponse(200, "Recenzja została zaktualizowana.")]
         [SwaggerResponse(400, "Nieprawidłowe dane wejściowe.")]
@@ -111,7 +112,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Usuwa recenzję", Description = "Umożliwia usunięcie recenzji. Dostępne tylko dla administratora.")]
         [SwaggerResponse(200, "Recenzja została usunięta.")]
         [SwaggerResponse(404, "Nie znaleziono recenzji.")]

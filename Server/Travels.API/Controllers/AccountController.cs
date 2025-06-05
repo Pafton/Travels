@@ -17,7 +17,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Rejestruje nowego użytkownika",Description = "Rejestruje użytkownika i wysyła link aktywacyjny na e-mail. Format linka: http://localhost:5190/User/activate-account/{userId}")]
     [SwaggerResponse(200, "Użytkownik został pomyślnie zarejestrowany.")]
     [SwaggerResponse(400, "Błąd podczas rejestracji.")]

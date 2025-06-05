@@ -5,7 +5,7 @@ import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [NgIf],
+  imports: [NgIf, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
@@ -33,5 +33,9 @@ export class NavbarComponent implements OnInit {
       return;
     }
     this.router.navigate([route]);
+  }
+
+   register() {
+    this.router.navigate(['/register']);
   }
 }

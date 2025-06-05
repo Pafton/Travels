@@ -80,7 +80,7 @@ namespace Travels.Application.Services
 
         public async Task DeleteReview(int id)
         {
-            if (id >= 0)
+            if (id <= 0)
                 throw new ArgumentOutOfRangeException("Id not found");
 
             var review = await _reviewRepository.GetReview(id);
