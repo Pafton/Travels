@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,11 +22,10 @@ export class LoginComponent {
   resetMode = false;
 
 
-  constructor(
-    private accountService: AccountService,
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
 
   onSubmit() {
     const loginData = { email: this.email, password: this.password };

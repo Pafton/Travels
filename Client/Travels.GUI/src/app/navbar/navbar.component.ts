@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
-import { Router, RouterModule } from '@angular/router';
+import { AuthService } from './../auth/auth.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -13,7 +13,8 @@ export class NavbarComponent implements OnInit {
 
   isLoggedIn = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  private authService = inject(AuthService)
+  private router = inject(Router) 
 
   ngOnInit(): void {
     this.authService.authStatus.subscribe(status => {

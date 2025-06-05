@@ -150,6 +150,8 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
     var prepDatabase = new PrepDatabase(dbContext, passwordHasher);
+
+    // If want run docker container , uncomment line below //
     //dbContext.Database.Migrate();
     prepDatabase.Seed();
 }
