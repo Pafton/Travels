@@ -36,6 +36,6 @@ export class UserService {
   }
 
   changePassword(dto: ChangePasswordDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/change-password`, dto);
+    return this.http.post(`${this.accountUrl}/change-password`, dto);
   }
 }

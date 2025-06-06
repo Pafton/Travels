@@ -7,6 +7,7 @@ import { RegisterComponent } from './register/register.component';
 import { ForgotPasswordComponent } from './forgot-password-component/forgot-password-component.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { ReservationComponent } from './reservation/reservation.component';
+import { LlmComponent } from './llm/llm.component';
 
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
   { path: 'reservation/new/:travelOfferId', component: TravelOfferDetailsComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'admin', component: AdminPanelComponent },
+  { path: 'llm', component: LlmComponent },
   { path: '',redirectTo: '/home', pathMatch: 'full'}
 ];
 

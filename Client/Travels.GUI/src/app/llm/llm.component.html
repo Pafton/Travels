@@ -1,0 +1,18 @@
+<app-navbar></app-navbar>
+
+<div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+  
+  <ul *ngIf="list.length > 0">
+    <li *ngFor="let item of list">
+      <h3>{{ item.nazwa }} ({{ item.miasto }}, {{ item.kraj }})</h3>
+      <p>{{ item.opis }}</p>
+      <small>Kategoria: {{ item.kategoria }}</small>
+    </li>
+  </ul>
+  
+  <div *ngIf="!list.length && !errorMessage">
+    Ładowanie danych...
+  </div>
+  

@@ -56,11 +56,9 @@ export class MyProfileComponent implements OnInit {
   changePassword(): void {
     this.userService.changePassword(this.changePasswordDto).subscribe({
       next: () => {
-        console.log('Hasło zmienione pomyślnie.');
         alert('Hasło zostało zmienione.');
       },
       error: (err) => {
-        console.error('Błąd podczas zmiany hasła:', err);
         alert('Błąd podczas zmiany hasła: ' + err.error);
       }
     });

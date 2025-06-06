@@ -139,8 +139,8 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("change-password")]
-    [Authorize(Roles = "Customer")]
-    [SwaggerOperation(Summary = "Zmienia zmiana hasła dla zalogowanego użytkownika -- CUSTOMER", Description = "Użytkonik może zmienić swoje hasło.")]
+    [Authorize(Roles = "Customer,Admin")]
+    [SwaggerOperation(Summary = "Zmienia zmiana hasła dla zalogowanego użytkownika -- CUSTOMER", Description = "Użytkownik może zmienić swoje hasło.")]
     [SwaggerResponse(200, "Hasło zostało zmienione.")]
     [SwaggerResponse(400, "Nieprawidłowe dane.")]
     [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
@@ -155,7 +155,8 @@ public class AccountController : ControllerBase
             }
             var customerId = int.Parse(userIdClaim);
             await _accountService.ResetPasswordForLoginUser(forgotPasswordForLoginUserDto, customerId);
-            return Ok("User change password");
+            return Ok(new { message = "Hasło zostało zmienione." });
+
         }
         catch (UnauthorizedAccessException ex)
         {

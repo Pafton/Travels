@@ -1,6 +1,14 @@
+<app-navbar></app-navbar>
+
 <div *ngIf="offer" class="offer-details-container">
   <h2>{{ offer.title }}</h2>
   <p>{{ offer.description }}</p>
+
+  <div *ngIf="isAdmin">
+    <h3>Dodaj zdjęcie do oferty</h3>
+    <input type="file" (change)="onFileSelected($event)" />
+    <button (click)="uploadImage()" [disabled]="!selectedFile">Dodaj zdjęcie</button>
+  </div>
 
   <div class="offer-info">
     <p><strong>Cena:</strong> {{ offer.price }} PLN</p>
