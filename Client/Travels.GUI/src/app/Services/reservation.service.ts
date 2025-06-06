@@ -27,4 +27,8 @@ export class ReservationService {
   updateReservation(id: number, reservation: Reservation): Observable<any> {
     return this.http.put(`${this.apiUrl}/UpdateReservation/${id}`, reservation);
   }
+
+  getMyReservations(): Observable<Reservation[]>{
+    return this.http.get<Reservation[]>(`${this.apiUrl}/MyReservations`)
+  }
 }

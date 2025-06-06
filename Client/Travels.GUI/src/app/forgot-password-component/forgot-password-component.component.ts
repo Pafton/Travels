@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AccountService } from '../Services/account.service';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -15,7 +16,8 @@ export class ForgotPasswordComponent {
   newPassword = '';
   tokenSent = false;
 
-  constructor(private accountService: AccountService) { }
+  private accountService = inject(AccountService);
+  private router = inject(Router);
 
   sendToken() {
     this.accountService.sendPasswordResetLink(this.email).subscribe({
@@ -29,7 +31,10 @@ export class ForgotPasswordComponent {
 
   resetPassword() {
     this.accountService.resetPassword(this.token, this.newPassword).subscribe({
-      next: () => alert('Hasło zmienione pomyślnie'),
+      next: () => {
+        alert('Hasło zmienione pomyślnie');
+        this.router.navigate(['/login']);
+      },
       error: (err) => {
         console.error('Błąd podczas resetowania hasła:', err);
         alert('Status zmiany hasla: ' + (err.error?.message || err.statusText || 'Nieznany błąd') +
@@ -37,5 +42,6 @@ export class ForgotPasswordComponent {
       }
     });
   }
+  
 
 }

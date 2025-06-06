@@ -40,6 +40,17 @@ namespace Travels.Application.Services
             await _travelOfferRepository.ChangeTravelOffer(travelOffer);
         }
 
+        public async Task<IEnumerable<DestinationDto>> GetDestinations()
+        {
+            var destinations = await _travelOfferRepository.GetDestinations();
+
+            if (destinations == null)
+                throw new ArgumentNullException("Destinations not found");
+
+            var destinationDtos = _mapper.Map<IEnumerable<DestinationDto>>(destinations);
+            return destinationDtos;
+        }
+
         public async Task<TravelOfferDto?> GetTravel(int id)
         {
             if (id < 0)

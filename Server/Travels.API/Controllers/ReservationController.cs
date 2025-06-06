@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 using Travels.Application.Dtos.Reservation;
 using Travels.Application.Interfaces;
 
@@ -42,9 +43,9 @@ namespace Travels.API.Controllers
                 return NotFound($"Reservation not found: {ex.Message}");
             }
         }
-
+         
         [HttpPost]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer,Admin")]
         [Route("StartReservation")]
         [SwaggerOperation(Summary = "Tworzy nową rezerwację -- CUSTOMER", Description = "Tworzy nową rezerwację na podstawie przekazanych danych.")]
         [SwaggerResponse(200, "Rezerwacja została pomyślnie utworzona.")]
@@ -126,6 +127,34 @@ namespace Travels.API.Controllers
             {
                 Console.WriteLine($">[ReservationCtl] Unhandled exception: {ex.Message}");
                 return BadRequest($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Customer,Admin")]
+        [Route("MyReservations")]
+        [SwaggerOperation(Summary = "Zwraca rezerwacje zalogowanego użytkownika -- CUSTOMER", Description = "Pobiera wszystkie rezerwacje przypisane do aktualnie zalogowanego użytkownika.")]
+        [SwaggerResponse(200, "Zwrócono listę rezerwacji użytkownika.", typeof(IEnumerable<ReservationDto>))]
+        [SwaggerResponse(401, "Brak autoryzacji.")]
+        public async Task<IActionResult> GetMyReservations()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim))
+                    return Unauthorized("Brak identyfikatora użytkownika w tokenie.");
+
+                if (!int.TryParse(userIdClaim, out var userId))
+                    return BadRequest("Błędny identyfikator użytkownika.");
+
+                var reservations = await _reservationService.GetReservationsByUserId(userId);
+                return Ok(reservations);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[ReservationCtl] Unhandled exception in GetMyReservations: {ex.Message}");
+                return StatusCode(500, "Wystąpił błąd podczas pobierania rezerwacji.");
             }
         }
     }

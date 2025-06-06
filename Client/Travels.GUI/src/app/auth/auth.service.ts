@@ -41,4 +41,29 @@ export class AuthService {
       return null;
     }
   }
+
+  isAdmin(): boolean {
+    const token = this.getToken();
+    if (!token) {
+      console.log("Brak tokena, isAdmin = false");
+      return false;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      const roleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+      const roleValue = payload[roleClaim];
+
+      if (!roleValue) return false;
+
+      return roleValue === 'Admin';
+    } catch (error) {
+      console.error('Błąd podczas dekodowania tokena:', error);
+      return false;
+    }
+  }
+
+
+
 }

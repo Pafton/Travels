@@ -59,7 +59,7 @@ namespace Travels.Application.Services
             if (user == null)
                 throw new Exception("User not found");
 
-            if (!user.isActivate)
+            if (!user.IsActivate)
                 throw new Exception("Account is not active");
 
 
@@ -133,10 +133,10 @@ namespace Travels.Application.Services
             if (user == null)
                 throw new KeyNotFoundException("User not found.");
 
-            if (user.isActivate == true)
+            if (user.IsActivate == true)
                 throw new Exception("Account is already activated");
 
-            user.isActivate = true;
+            user.IsActivate = true;
             await _userRepository.ChangeUser(user);
         }
 
@@ -146,7 +146,7 @@ namespace Travels.Application.Services
             if (user == null)
                 throw new KeyNotFoundException("User not found.");
 
-            user.isActivate = false;
+            user.IsActivate = false;
             await _userRepository.ChangeUser(user);
         }
 

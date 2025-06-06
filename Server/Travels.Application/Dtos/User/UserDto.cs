@@ -14,6 +14,7 @@ namespace Travels.Application.Dtos.User
         public string Name { get; set; } = default!;
         public string Surname { get; set; } = default!;
         public string Email { get; set; } = default!;
+        public bool IsActivate {  get; set; }
         public ICollection<ReviewDto> Reviews { get; set; } = default!;
         public ICollection<ReservationDto> Reservations { get; set; } = default!;
     }

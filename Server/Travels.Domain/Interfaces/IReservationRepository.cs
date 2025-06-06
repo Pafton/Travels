@@ -8,6 +8,7 @@ namespace Travels.Domain.Interfaces
         Task<IEnumerable<Reservation>> GetReservations();
         Task<Reservation?> GetReservation(int? id);
         Task ChangeReservation(Reservation reservation);
+        Task<IEnumerable<Reservation>> GetReservationsByUserId(int userId);
         Task DeleteReservation(int id);
     }
 }

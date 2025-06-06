@@ -1,33 +1,40 @@
 .profile-container {
   max-width: 700px;
   margin: 20px auto;
-  padding: 15px 20px;
+  padding: 20px 25px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #fafafa;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   color: #2c3e50;
+  font-weight: 600;
+  font-size: 28px;
 }
 
 section {
-  margin-bottom: 25px;
+  margin-bottom: 30px;
 }
 
 section h3 {
-  border-bottom: 2px solid #2980b9;
-  padding-bottom: 5px;
+  border-bottom: 3px solid #2980b9;
+  padding-bottom: 8px;
   color: #2980b9;
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 15px;
 }
 
 p {
-  margin: 6px 0;
+  margin: 8px 0;
   font-size: 16px;
+  line-height: 1.4;
 }
 
 ul {
@@ -37,8 +44,76 @@ ul {
 
 ul li {
   background: #e3f2fd;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  padding: 15px 20px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease;
+}
+
+ul li:hover {
+  background: #d0e7fc;
+}
+
+.review-buttons {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.review-buttons button {
+  background-color: #2980b9;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.review-buttons button:hover {
+  background-color: #1c5a8a;
+}
+
+.change-password-form {
+  margin-top: 20px;
+  background-color: #f4f8fb;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #cbd6e2;
+}
+
+.change-password-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #444;
+}
+
+.change-password-form input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 15px;
+  border: 1px solid #bbb;
   border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 10px 15px;
-  box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+  font-size: 14px;
+}
+
+.change-password-form button {
+  background-color: #27ae60;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.change-password-form button:hover {
+  background-color: #1e8449;
 }

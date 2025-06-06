@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { AccountService } from '../Services/account.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -25,6 +25,7 @@ export class LoginComponent {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private accountService = inject(AccountService)
 
 
   onSubmit() {

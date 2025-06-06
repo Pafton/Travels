@@ -46,6 +46,12 @@ namespace Travels.Application.Services
             return reservationDto;
         }
 
+        public async Task<IEnumerable<ReservationDto>> GetReservationsByUserId(int userId)
+        {
+            var reservations = await _reservationRepository.GetReservationsByUserId(userId);
+            return _mapper.Map<List<ReservationDto>>(reservations);
+        }
+
         public async Task StartReservation(ReservationDto reservationDto)
         {
             if (reservationDto == null)

@@ -8,10 +8,12 @@ import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { ReviewFormComponent } from '../review-form/review-form.component';
 import { ReviewComponent } from '../review/review.component';
+import { ChangePasswordDto } from '../DTO/ChangePasswordDto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-my-profile',
-  imports: [NgIf, NgFor, CommonModule, NavbarComponent, ReviewFormComponent, ReviewComponent],
+  imports: [NgIf, NgFor, CommonModule, NavbarComponent, ReviewFormComponent, ReviewComponent, FormsModule],
   templateUrl: './my-profile.component.html',
   styleUrls: ['./my-profile.component.css']
 })
@@ -24,7 +26,10 @@ export class MyProfileComponent implements OnInit {
   editingReview = false;
   currentTravelOfferId?: number;
   userFilteredReviews: Review[] = [];
+  changePasswordDto = {} as ChangePasswordDto;
   showFilteredReviews = false;
+  changePasswordFormVisible = false;
+
 
   constructor(
     private userService: UserService,
@@ -48,8 +53,25 @@ export class MyProfileComponent implements OnInit {
     }
   }
 
+  changePassword(): void {
+    this.userService.changePassword(this.changePasswordDto).subscribe({
+      next: () => {
+        console.log('Hasło zmienione pomyślnie.');
+        alert('Hasło zostało zmienione.');
+      },
+      error: (err) => {
+        console.error('Błąd podczas zmiany hasła:', err);
+        alert('Błąd podczas zmiany hasła: ' + err.error);
+      }
+    });
+  }
+
   hasReview(travelOfferId: number): boolean {
     return !!this.user?.reviews?.some(r => r.travelOfferId === travelOfferId);
+  }
+
+  toggleChangePasswordForm(): void {
+    this.changePasswordFormVisible = !this.changePasswordFormVisible;
   }
 
   openReviewForm(travelOfferId: number, edit: boolean = false): void {

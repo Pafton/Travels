@@ -89,7 +89,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("set-activation/{id}")]
+    [HttpPatch("activate/{id}")]
     [SwaggerOperation(Summary = "Zmienia status aktywacji użytkownika -- User/Admin", Description = "Użytkownik może aktywować konto za pomocą linku z maila.")]
     [SwaggerResponse(200, "Status aktywacji został zmieniony.")]
     [SwaggerResponse(400, "Nieprawidłowe dane.")]
@@ -113,7 +113,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPatch("set-activation/{id}")]
+    [HttpPatch("deactivate/{id}")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Deaktywacja użytkownika -- ADMIN", Description = "Administrator może dezaktywować konto użytkownika.")]
     [SwaggerResponse(200, "Status aktywacji został zmieniony.")]
@@ -144,7 +144,6 @@ public class AccountController : ControllerBase
     [SwaggerResponse(200, "Hasło zostało zmienione.")]
     [SwaggerResponse(400, "Nieprawidłowe dane.")]
     [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
-    [Authorize]
     public async Task<IActionResult> ChangePassword(ForgotPasswordForLoginUserDto forgotPasswordForLoginUserDto)
     {
         try

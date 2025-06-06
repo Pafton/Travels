@@ -41,6 +41,10 @@ namespace Travels.Application.Profiles
             CreateMap<TravelOfferImageDto, TravelOfferImage>();
             CreateMap<TravelOfferImage, TravelOfferImageDto>();
 
+            CreateMap<Destination, DestinationDto>();
+            CreateMap<DestinationDto, Destination>();
+
+
         }
     }
 }

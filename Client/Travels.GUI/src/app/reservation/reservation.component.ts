@@ -1,40 +1,54 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
 import { ReservationService } from '../Services/reservation.service';
-import { AuthService } from '../auth/auth.service';
-import { TravelOffer } from '../Model/travelOffer.model';
-import { User } from '../Model/user.model';
 import { Reservation } from '../Model/reservation.model';
-import { HomeService } from '../Services/home.service';
-import { NavbarComponent } from '../navbar/navbar.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { NavbarComponent } from "../navbar/navbar.component";
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-reservation',
-  standalone: true,
-  imports: [NavbarComponent, CommonModule, FormsModule],
+  imports: [NavbarComponent, NgIf, NgFor],
   templateUrl: './reservation.component.html',
-  styleUrls: ['./reservation.component.css'],
+  styleUrl: './reservation.component.css'
 })
-export class ReservationComponent implements OnInit {
-  travelOffer?: TravelOffer;
-  userId?: number;
-  user?: User;
-  reservationDate: string = '';
-  availableDates: string[] = [];
+export class ReservationComponent {
 
+  reservations: Reservation[] = [];
+  isLoading = false;
+  errorMessage: string | null = null;
 
-  constructor(
-    private route: ActivatedRoute,
-    private reservationService: ReservationService,
-    private authService: AuthService,
-    private homeService: HomeService,
-    private router: Router
-  ) { }
+  private reservationService = inject(ReservationService)
 
   ngOnInit(): void {
-
+    this.loadReservations();
   }
 
+  loadReservations(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.reservationService.getMyReservations().subscribe({
+      next: (data) => {
+        this.reservations = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = "Błąd podczas ładowania rezerwacji.";
+        this.isLoading = false;
+        console.error(err);
+      }
+    });
+  }
+
+  cancelReservation(id: number): void {
+    if (confirm("Czy na pewno chcesz anulować tę rezerwację?")) {
+      this.reservationService.cancelReservation(id).subscribe({
+        next: () => {
+          this.loadReservations();
+        },
+        error: (err) => {
+          this.errorMessage = "Błąd podczas anulowania rezerwacji.";
+          console.error(err);
+        }
+      });
+    }
+  }
 }

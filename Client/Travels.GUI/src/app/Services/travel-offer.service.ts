@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TravelOffer } from '../Model/travelOffer.model';
 import { Observable } from 'rxjs';
+import { Destination } from '../Model/destination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,16 @@ export class TravelOfferService {
     return this.http.put(`${this.apiUrl}/UpdateTravel/${id}`, offer);
   }
 
+  getOfferById(id: number): Observable<TravelOffer> {
+    return this.http.get<TravelOffer>(`${this.apiUrl}/GetTravel/${id}`);
+  }
+
   deleteOffer(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/DeleteTravel/${id}`);
+  }
+
+  getDestinations(): Observable<Destination[]> {
+    return this.http.get<Destination[]>(`${this.apiUrl}/GetDestinations`);
   }
 
 }
