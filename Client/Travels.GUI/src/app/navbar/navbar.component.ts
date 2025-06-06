@@ -1,17 +1,18 @@
 import { AuthService } from './../auth/auth.service';
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [NgIf],
+  imports: [NgIf, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
 
   isLoggedIn = false;
+  isAdmin = false;
 
   private authService = inject(AuthService)
   private router = inject(Router) 
@@ -19,6 +20,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.authService.authStatus.subscribe(status => {
       this.isLoggedIn = status;
+      this.isAdmin = this.authService.isAdmin();
     });
   }
 
@@ -33,5 +35,9 @@ export class NavbarComponent implements OnInit {
       return;
     }
     this.router.navigate([route]);
+  }
+
+   register() {
+    this.router.navigate(['/register']);
   }
 }

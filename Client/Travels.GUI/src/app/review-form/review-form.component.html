@@ -1,0 +1,18 @@
+<div class="review-form">
+  <h3>{{ isEdit ? "Edytuj recenzję" : "Dodaj recenzję" }}</h3>
+
+  <label>
+    Ocena:
+    <input type="number" [(ngModel)]="review.rating" min="1" max="5" />
+  </label>
+
+  <label>
+    Komentarz:
+    <textarea [(ngModel)]="review.comment"></textarea>
+  </label>
+
+  <button (click)="submit()">
+    {{ isEdit ? "Zapisz zmiany" : "Dodaj recenzję" }}
+  </button>
+  <button (click)="cancel()">Anuluj</button>
+</div>

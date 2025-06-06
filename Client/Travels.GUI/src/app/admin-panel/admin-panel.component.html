@@ -1,0 +1,58 @@
+<app-navbar></app-navbar>
+
+<h2>Panel Administratora</h2>
+
+<div class="buttons">
+  <button (click)="getAllUsers()">Pobierz wszystkich użytkowników</button>
+  <button (click)="getUserById()">Pobierz użytkownika po ID</button>
+  <input type="number" [(ngModel)]="userId" placeholder="Podaj ID użytkownika" />
+  <button (click)="deleteUser()">Usuń użytkownika</button>
+  <button (click)="activateUser()">Aktywuj użytkownika</button>
+  <button (click)="deactivateUser()">Dezaktywuj użytkownika</button>
+</div>
+
+<div class="results">
+  <pre>{{ result | json }}</pre>
+</div>
+
+
+<hr>
+<h3>Zarządzanie ofertami podróży</h3>
+
+<form (ngSubmit)="submitOffer()" #offerForm="ngForm">
+  <input type="hidden" [(ngModel)]="offer.id" name="id" />
+
+  <label>Tytuł:</label>
+  <input type="text" [(ngModel)]="offer.title" name="title" required>
+
+  <label>Opis:</label>
+  <textarea [(ngModel)]="offer.description" name="description" required></textarea>
+
+  <label>Cena:</label>
+  <input type="number" [(ngModel)]="offer.price" name="price" required>
+
+  <label>Data rozpoczęcia:</label>
+  <input type="date" [(ngModel)]="offer.begin" name="begin" required>
+
+  <label>Data zakończenia:</label>
+  <input type="date" [(ngModel)]="offer.end" name="end" required>
+
+  <label>Dostępne miejsca:</label>
+  <input type="number" [(ngModel)]="offer.availableSpots" name="availableSpots" required>
+
+  <label>Cel podróży:</label>
+  <select [(ngModel)]="offer.destinationId" name="destinationId" required>
+    <option *ngFor="let dest of destinations" [value]="dest.id">
+      {{ dest.name }} ({{ dest.city }}, {{ dest.country }})
+    </option>
+  </select>
+
+  <button type="submit">{{ offer.id ? 'Zaktualizuj' : 'Utwórz' }} ofertę</button>
+</form>
+
+<button (click)="loadOfferById()">Załaduj ofertę do edycji</button>
+<input type="number" [(ngModel)]="editOfferId" placeholder="ID oferty do edycji">
+
+<div class="results">
+  <pre>{{ resultOffer | json }}</pre>
+</div>

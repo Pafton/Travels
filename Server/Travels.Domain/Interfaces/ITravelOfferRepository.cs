@@ -9,5 +9,6 @@ namespace Travels.Domain.Interfaces
         Task<TravelOffer?> GetTravel(int? id);
         Task ChangeTravelOffer(TravelOffer travelOffer);
         Task DeleteTravelOffer(int id);
+        Task<IEnumerable<Destination>> GetDestinations();
     }
 }

@@ -16,6 +16,8 @@ namespace Travels.Application.Interfaces
         Task UpdateTravelOffer(TravelOfferDto travelOfferDto);
         Task RemoveTravelOffer(int id);
         Task AddImageToTravelOffer(TravelOfferImageDto imageDto);
+        Task<IEnumerable<DestinationDto>> GetDestinations();
+
 
     }
 }

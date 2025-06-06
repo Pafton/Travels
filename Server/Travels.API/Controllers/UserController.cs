@@ -17,6 +17,44 @@ namespace Travels.API.Controllers
             _userService = userService;
         }
 
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserById([FromRoute] int userId)
+        {
+            try
+            {
+                var userDto = await _userService.GetUserById(userId);
+                return Ok(userDto);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return BadRequest("Nieprawidłowy identyfikator użytkownika.");
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound("Użytkownik nie został znaleziony.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[UserCtrl] Error while retrieving user: {ex.Message}");
+                return StatusCode(500, "Wystąpił błąd serwera.");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                var usersDto = await _userService.GetUsers();
+                return Ok(usersDto);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($">[UserCtrl] Error while retrieving users: {ex.Message}");
+                return StatusCode(500, "Wystąpił błąd podczas pobierania listy użytkowników.");
+            }
+        }
+
         [HttpPost("add-admin-role/{userId}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddAdminRole([FromRoute] int userId)

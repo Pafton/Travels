@@ -17,7 +17,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Rejestruje nowego użytkownika",Description = "Rejestruje użytkownika i wysyła link aktywacyjny na e-mail. Format linka: http://localhost:5190/User/activate-account/{userId}")]
     [SwaggerResponse(200, "Użytkownik został pomyślnie zarejestrowany.")]
     [SwaggerResponse(400, "Błąd podczas rejestracji.")]
@@ -89,7 +89,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpGet("set-activation/{id}")]
+    [HttpPatch("activate/{id}")]
     [SwaggerOperation(Summary = "Zmienia status aktywacji użytkownika -- User/Admin", Description = "Użytkownik może aktywować konto za pomocą linku z maila.")]
     [SwaggerResponse(200, "Status aktywacji został zmieniony.")]
     [SwaggerResponse(400, "Nieprawidłowe dane.")]
@@ -113,7 +113,7 @@ public class AccountController : ControllerBase
         }
     }
 
-    [HttpPatch("set-activation/{id}")]
+    [HttpPatch("deactivate/{id}")]
     [Authorize(Roles = "Admin")]
     [SwaggerOperation(Summary = "Deaktywacja użytkownika -- ADMIN", Description = "Administrator może dezaktywować konto użytkownika.")]
     [SwaggerResponse(200, "Status aktywacji został zmieniony.")]
@@ -139,12 +139,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("change-password")]
-    [Authorize(Roles = "Customer")]
-    [SwaggerOperation(Summary = "Zmienia zmiana hasła dla zalogowanego użytkownika -- CUSTOMER", Description = "Użytkonik może zmienić swoje hasło.")]
+    [Authorize(Roles = "Customer,Admin")]
+    [SwaggerOperation(Summary = "Zmienia zmiana hasła dla zalogowanego użytkownika -- CUSTOMER", Description = "Użytkownik może zmienić swoje hasło.")]
     [SwaggerResponse(200, "Hasło zostało zmienione.")]
     [SwaggerResponse(400, "Nieprawidłowe dane.")]
     [SwaggerResponse(404, "Użytkownik nie został znaleziony.")]
-    [Authorize]
     public async Task<IActionResult> ChangePassword(ForgotPasswordForLoginUserDto forgotPasswordForLoginUserDto)
     {
         try
@@ -156,7 +155,8 @@ public class AccountController : ControllerBase
             }
             var customerId = int.Parse(userIdClaim);
             await _accountService.ResetPasswordForLoginUser(forgotPasswordForLoginUserDto, customerId);
-            return Ok("User change password");
+            return Ok(new { message = "Hasło zostało zmienione." });
+
         }
         catch (UnauthorizedAccessException ex)
         {

@@ -6,6 +6,7 @@ namespace Travels.Application.Interfaces
     {
         Task StartReservation(ReservationDto reservationDto);
         Task<ReservationDto?> GetReservation(int id);
+        Task<IEnumerable<ReservationDto?>> GetReservationsByUserId(int userId);
         Task UpdateReservation(ReservationDto reservationDto, int id);
         Task CancelReservation(int id);
     }

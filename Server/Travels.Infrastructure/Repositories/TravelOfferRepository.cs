@@ -53,5 +53,9 @@ namespace Travels.Infrastructure.Repositories
         {
             return await _appDbContext.TravelOffers.ToListAsync();
         }
+        public async Task<IEnumerable<Destination>> GetDestinations()
+        {
+            return await _appDbContext.Destinations.ToListAsync();
+        }
     }
 }

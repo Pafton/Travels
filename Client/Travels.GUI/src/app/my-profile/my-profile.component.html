@@ -1,0 +1,101 @@
+<app-navbar></app-navbar>
+<div class="profile-container" *ngIf="user">
+  <h2>Moje dane</h2>
+
+  <section class="user-info">
+    <h3>Dane użytkownika</h3>
+    <p><strong>Imię:</strong> {{ user.name }}</p>
+    <p><strong>Nazwisko:</strong> {{ user.surname }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+  </section>
+
+  <section class="reviews" *ngIf="user.reviews && user.reviews.length > 0">
+    <h3>Moje recenzje</h3>
+    <ul>
+      <li *ngFor="let review of user.reviews">
+        <p><strong>Ocena:</strong> {{ review.rating }} / 5</p>
+        <p><strong>Komentarz:</strong> {{ review.comment }}</p>
+        <p>
+          <em>{{ review.date | date : "mediumDate" }}</em>
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="reservations" *ngIf="user.reservations && user.reservations.length > 0">
+    <h3>Moje rezerwacje</h3>
+    <ul>
+      <li *ngFor="let reservation of user.reservations">
+        <p>
+          <strong>Data rezerwacji:</strong>
+          {{ reservation.reservationDate | date : "mediumDate" }}
+        </p>
+        <p>
+          <strong>Status:</strong>
+          {{ reservation.status ? "Potwierdzona" : "Oczekująca" }}
+        </p>
+
+        <div class="review-buttons">
+          <button *ngIf="!hasReview(reservation.travelOfferId)" (click)="openReviewForm(reservation.travelOfferId)">
+            Dodaj recenzję
+          </button>
+
+          <button *ngIf="hasReview(reservation.travelOfferId)"
+            (click)="openReviewForm(reservation.travelOfferId, true)">
+            Edytuj recenzję
+          </button>
+
+          <button *ngIf="hasReview(reservation.travelOfferId)" (click)="deleteReview(reservation.travelOfferId)">
+            Usuń recenzję
+          </button>
+
+          <button (click)="showUserReviewsForOwnOffers()">
+            Zobacz recenzje
+          </button>
+
+          <div *ngIf="showFilteredReviews">
+            <h2>Twoje recenzje ofert, które zarezerwowałeś:</h2>
+            <div *ngFor="let review of userFilteredReviews">
+              <p><strong>Oferta ID:</strong> {{ review.travelOfferId }}</p>
+              <p><strong>Ocena:</strong> {{ review.rating }}</p>
+              <p><strong>Komentarz:</strong> {{ review.comment }}</p>
+              <hr />
+            </div>
+          </div>
+
+          <div *ngIf="showReview">
+            <app-review></app-review>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+
+  <button (click)="toggleChangePasswordForm()">
+    {{ changePasswordFormVisible ? 'Anuluj zmianę hasła' : 'Zmień hasło' }}
+  </button>
+
+  <div *ngIf="changePasswordFormVisible" class="change-password-form">
+    <h3>Zmiana hasła</h3>
+    <form (ngSubmit)="changePassword()">
+      <label>Aktualne hasło:</label>
+      <input type="password" [(ngModel)]="changePasswordDto.oldPassword" name="oldPassword" required />
+
+      <label>Nowe hasło:</label>
+      <input type="password" [(ngModel)]="changePasswordDto.newPassword" name="newPassword" required />
+
+      <label>Potwierdź nowe hasło:</label>
+      <input type="password" [(ngModel)]="changePasswordDto.confirmNewPassword" name="confirmNewPassword" required />
+
+      <button type="submit">Zapisz</button>
+    </form>
+  </div>
+
+  <app-review-form *ngIf="reviewFormVisible" [review]="currentReview!" [isEdit]="editingReview"
+    (closeForm)="closeReviewForm()" (refresh)="refreshReviews()"></app-review-form>
+
+  <ng-template #noUser>
+    <p>Brak danych użytkownika.</p>
+  </ng-template>
+</div>

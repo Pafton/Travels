@@ -8,6 +8,6 @@ export interface TravelOffer {
     begin: Date;
     end: Date;
     availableSpots: number;
-    destinationId: number;
+    destinationId?: number;
     travelOfferImages: TravelOfferImage[];
 }

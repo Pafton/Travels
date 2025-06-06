@@ -54,5 +54,11 @@ namespace Travels.Infrastructure.Repositories
         {
             return await _appDbContext.Reservations.ToListAsync();
         }
+
+        public async Task<IEnumerable<Reservation>> GetReservationsByUserId(int userId)
+        {
+            return await _appDbContext.Reservations.Where(r => r.UserId == userId).ToListAsync();
+        }
+
     }
 }

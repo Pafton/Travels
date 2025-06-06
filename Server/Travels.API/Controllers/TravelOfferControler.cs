@@ -60,7 +60,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpPost("CreateTravel")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Tworzy nową ofertę podróży -- ADMIN", Description = "Tworzy nową ofertę podróży na podstawie przekazanych danych.")]
         [SwaggerResponse(201, "Oferta podróży została pomyślnie utworzona.")]
         [SwaggerResponse(400, "Nieprawidłowe dane oferty podróży.")]
@@ -79,7 +79,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpDelete("DeleteTravel/{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Usuwa ofertę podróży o podanym ID -- ADMIN", Description = "Usuwa ofertę podróży na podstawie identyfikatora.")]
         [SwaggerResponse(200, "Oferta podróży została pomyślnie usunięta.")]
         [SwaggerResponse(400, "Nieprawidłowe ID oferty podróży.")]
@@ -102,7 +102,7 @@ namespace Travels.API.Controllers
         }
 
         [HttpPut("UpdateTravel/{id}")]
-       // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(Summary = "Aktualizuje ofertę podróży o podanym ID -- ADMIN", Description = "Aktualizuje ofertę podróży na podstawie przekazanych danych.")]
         [SwaggerResponse(200, "Oferta podróży została pomyślnie zaktualizowana.")]
         [SwaggerResponse(400, "Nieprawidło  we dane oferty podróży.")]
@@ -143,5 +143,23 @@ namespace Travels.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("GetDestinations")]
+        [SwaggerOperation(Summary = "Pobiera wszystkie destynacje", Description = "Zwraca listę wszystkich dostępnych destynacji.")]
+        [SwaggerResponse(200, "Lista destynacji została zwrócona.", typeof(IEnumerable<DestinationDto>))]
+        [SwaggerResponse(404, "Nie znaleziono destynacji.")]
+        public async Task<IActionResult> GetDestinations()
+        {
+            try
+            {
+                var destinations = await _travelOfferService.GetDestinations();
+                return Ok(destinations);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
     }
 }
