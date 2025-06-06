@@ -1,4 +1,3 @@
-import { AuthService } from './../auth/auth.service';
 import { TravelOffer } from './../Model/travelOffer.model';
 import { Component, inject } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
@@ -6,7 +5,6 @@ import { HomeService } from '../Services/home.service';
 import { NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReviewComponent } from "../review/review.component";
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -23,9 +21,6 @@ export class HomeComponent {
   currentImageIndex: number[] = [];
 
   private homeService = inject(HomeService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
 
   ngOnInit() {
     this.getTravelAllOffers();

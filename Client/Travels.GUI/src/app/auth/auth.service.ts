@@ -11,16 +11,16 @@ export class AuthService {
   authStatus = this.loggedIn.asObservable();
 
   setToken(token: string) {
-    localStorage.setItem(this.tokenKey, token);
+    sessionStorage.setItem(this.tokenKey, token);
     this.loggedIn.next(true);
   }
-
+  
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return sessionStorage.getItem(this.tokenKey);
   }
-
+  
   clearToken() {
-    localStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(this.tokenKey);
     this.loggedIn.next(false);
   }
 

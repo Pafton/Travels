@@ -85,7 +85,7 @@ builder.Services.AddSwaggerGen(opt =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin",
-        builder => builder.WithOrigins("http://localhost:4200")
+        builder => builder.WithOrigins("http://localhost:4200", "http://localhost:8080")
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials()
@@ -152,7 +152,7 @@ using (var scope = app.Services.CreateScope())
     var prepDatabase = new PrepDatabase(dbContext, passwordHasher);
 
     // If want run docker container , uncomment line below //
-    //dbContext.Database.Migrate();
+    dbContext.Database.Migrate();
     prepDatabase.Seed();
 }
 
